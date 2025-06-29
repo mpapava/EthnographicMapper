@@ -1,6 +1,6 @@
 import { 
   users, regions, tours, products, blogPosts, contacts, bookings, cartItems,
-  type User, type InsertUser, type Region, type InsertRegion, 
+  type User, type InsertUser, type UpsertUser, type Region, type InsertRegion, 
   type Tour, type InsertTour, type Product, type InsertProduct,
   type BlogPost, type InsertBlogPost, type Contact, type InsertContact,
   type Booking, type InsertBooking, type CartItem, type InsertCartItem
@@ -9,10 +9,9 @@ import { db } from "./db";
 import { eq } from "drizzle-orm";
 
 export interface IStorage {
-  // Users
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  // Users (mandatory for Replit Auth)
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
 
   // Regions
   getAllRegions(): Promise<Region[]>;
@@ -72,7 +71,7 @@ export interface IStorage {
 }
 
 export class MemStorage implements IStorage {
-  private users: Map<number, User>;
+  private users: Map<string, User>;
   private regions: Map<number, Region>;
   private tours: Map<number, Tour>;
   private products: Map<number, Product>;
@@ -375,20 +374,31 @@ export class MemStorage implements IStorage {
     });
   }
 
-  // User methods
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+  // User methods (mandatory for Replit Auth)
+  async getUser(id: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.id === id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.username === username);
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { ...insertUser, id, createdAt: new Date() };
-    this.users.set(id, user);
-    return user;
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const existingUser = await this.getUser(userData.id);
+    
+    if (existingUser) {
+      const updatedUser: User = {
+        ...existingUser,
+        ...userData,
+        updatedAt: new Date(),
+      };
+      this.users.set(userData.id, updatedUser);
+      return updatedUser;
+    } else {
+      const newUser: User = {
+        ...userData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      this.users.set(userData.id, newUser);
+      return newUser;
+    }
   }
 
   // Region methods
@@ -639,20 +649,23 @@ export class MemStorage implements IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
-  async getUser(id: number): Promise<User | undefined> {
+  // User operations (mandatory for Replit Auth)
+  async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user || undefined;
+    return user;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user || undefined;
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
+  async upsertUser(userData: UpsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
-      .values(insertUser)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
       .returning();
     return user;
   }

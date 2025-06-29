@@ -114,7 +114,7 @@ async function seedDatabase() {
         description: "Discover the medieval towers and mountain culture of Upper Svaneti.",
         descriptionKa: "აღმოაჩინეთ ზემო სვანეთის შუა საუკუნეების კოშკები და მთის კულტურა.",
         descriptionRu: "Откройте для себя средневековые башни и горную культуру Верхней Сванетии.",
-        imageUrl: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c",
+        imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         featured: true,
         category: "Adventure",
         price: "200",
