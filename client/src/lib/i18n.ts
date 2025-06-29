@@ -17,9 +17,9 @@ export const translations: Translations = {
 
   // Hero Section
   'hero.title': { 
-    en: 'Discover Georgia\'s Ethnographic Heritage', 
-    ka: 'აღმოაჩინეთ საქართველოს ეთნოგრაფიული მემკვიდრეობა', 
-    ru: 'Откройте этнографическое наследие Грузии' 
+    en: 'Discover Georgia\'s Ethnographic', 
+    ka: 'აღმოაჩინეთ საქართველოს ეთნოგრაფიული', 
+    ru: 'Откройте этнографическое' 
   },
   'hero.subtitle': { 
     en: 'Explore ancient regions, taste traditional cuisine, and experience the rich cultural tapestry of Georgia', 

@@ -102,6 +102,7 @@ The application uses a comprehensive database schema with the following main ent
 
 ## Changelog
 
+- June 29, 2025. Added PostgreSQL database with Drizzle ORM, migrated from in-memory storage to persistent database storage, seeded with Georgian heritage data
 - June 28, 2025. Initial setup
 
 ## User Preferences

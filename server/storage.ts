@@ -5,6 +5,8 @@ import {
   type BlogPost, type InsertBlogPost, type Contact, type InsertContact,
   type Booking, type InsertBooking, type CartItem, type InsertCartItem
 } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -636,4 +638,269 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+
+  async getAllRegions(): Promise<Region[]> {
+    return await db.select().from(regions);
+  }
+
+  async getRegionById(id: number): Promise<Region | undefined> {
+    const [region] = await db.select().from(regions).where(eq(regions.id, id));
+    return region || undefined;
+  }
+
+  async getRegionBySlug(slug: string): Promise<Region | undefined> {
+    const [region] = await db.select().from(regions).where(eq(regions.slug, slug));
+    return region || undefined;
+  }
+
+  async createRegion(region: InsertRegion): Promise<Region> {
+    const [newRegion] = await db
+      .insert(regions)
+      .values(region)
+      .returning();
+    return newRegion;
+  }
+
+  async updateRegion(id: number, region: Partial<InsertRegion>): Promise<Region | undefined> {
+    const [updatedRegion] = await db
+      .update(regions)
+      .set(region)
+      .where(eq(regions.id, id))
+      .returning();
+    return updatedRegion || undefined;
+  }
+
+  async deleteRegion(id: number): Promise<boolean> {
+    const result = await db.delete(regions).where(eq(regions.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getAllTours(): Promise<Tour[]> {
+    return await db.select().from(tours);
+  }
+
+  async getTourById(id: number): Promise<Tour | undefined> {
+    const [tour] = await db.select().from(tours).where(eq(tours.id, id));
+    return tour || undefined;
+  }
+
+  async getToursByRegion(regionId: number): Promise<Tour[]> {
+    return await db.select().from(tours).where(eq(tours.regionId, regionId));
+  }
+
+  async getToursByCategory(category: string): Promise<Tour[]> {
+    return await db.select().from(tours).where(eq(tours.category, category));
+  }
+
+  async getFeaturedTours(): Promise<Tour[]> {
+    return await db.select().from(tours).where(eq(tours.featured, true));
+  }
+
+  async createTour(tour: InsertTour): Promise<Tour> {
+    const [newTour] = await db
+      .insert(tours)
+      .values(tour)
+      .returning();
+    return newTour;
+  }
+
+  async updateTour(id: number, tour: Partial<InsertTour>): Promise<Tour | undefined> {
+    const [updatedTour] = await db
+      .update(tours)
+      .set(tour)
+      .where(eq(tours.id, id))
+      .returning();
+    return updatedTour || undefined;
+  }
+
+  async deleteTour(id: number): Promise<boolean> {
+    const result = await db.delete(tours).where(eq(tours.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getAllProducts(): Promise<Product[]> {
+    return await db.select().from(products);
+  }
+
+  async getProductById(id: number): Promise<Product | undefined> {
+    const [product] = await db.select().from(products).where(eq(products.id, id));
+    return product || undefined;
+  }
+
+  async getProductsByCategory(category: string): Promise<Product[]> {
+    return await db.select().from(products).where(eq(products.category, category));
+  }
+
+  async getFeaturedProducts(): Promise<Product[]> {
+    return await db.select().from(products).where(eq(products.featured, true));
+  }
+
+  async createProduct(product: InsertProduct): Promise<Product> {
+    const [newProduct] = await db
+      .insert(products)
+      .values(product)
+      .returning();
+    return newProduct;
+  }
+
+  async updateProduct(id: number, product: Partial<InsertProduct>): Promise<Product | undefined> {
+    const [updatedProduct] = await db
+      .update(products)
+      .set(product)
+      .where(eq(products.id, id))
+      .returning();
+    return updatedProduct || undefined;
+  }
+
+  async deleteProduct(id: number): Promise<boolean> {
+    const result = await db.delete(products).where(eq(products.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getAllBlogPosts(): Promise<BlogPost[]> {
+    return await db.select().from(blogPosts);
+  }
+
+  async getPublishedBlogPosts(): Promise<BlogPost[]> {
+    return await db.select().from(blogPosts).where(eq(blogPosts.published, true));
+  }
+
+  async getBlogPostById(id: number): Promise<BlogPost | undefined> {
+    const [post] = await db.select().from(blogPosts).where(eq(blogPosts.id, id));
+    return post || undefined;
+  }
+
+  async getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
+    const [post] = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug));
+    return post || undefined;
+  }
+
+  async getBlogPostsByCategory(category: string): Promise<BlogPost[]> {
+    return await db.select().from(blogPosts).where(eq(blogPosts.category, category));
+  }
+
+  async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
+    const [newPost] = await db
+      .insert(blogPosts)
+      .values(post)
+      .returning();
+    return newPost;
+  }
+
+  async updateBlogPost(id: number, post: Partial<InsertBlogPost>): Promise<BlogPost | undefined> {
+    const [updatedPost] = await db
+      .update(blogPosts)
+      .set(post)
+      .where(eq(blogPosts.id, id))
+      .returning();
+    return updatedPost || undefined;
+  }
+
+  async deleteBlogPost(id: number): Promise<boolean> {
+    const result = await db.delete(blogPosts).where(eq(blogPosts.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getAllContacts(): Promise<Contact[]> {
+    return await db.select().from(contacts);
+  }
+
+  async getContactById(id: number): Promise<Contact | undefined> {
+    const [contact] = await db.select().from(contacts).where(eq(contacts.id, id));
+    return contact || undefined;
+  }
+
+  async createContact(contact: InsertContact): Promise<Contact> {
+    const [newContact] = await db
+      .insert(contacts)
+      .values(contact)
+      .returning();
+    return newContact;
+  }
+
+  async updateContactStatus(id: number, status: string): Promise<Contact | undefined> {
+    const [updatedContact] = await db
+      .update(contacts)
+      .set({ status })
+      .where(eq(contacts.id, id))
+      .returning();
+    return updatedContact || undefined;
+  }
+
+  async getAllBookings(): Promise<Booking[]> {
+    return await db.select().from(bookings);
+  }
+
+  async getBookingById(id: number): Promise<Booking | undefined> {
+    const [booking] = await db.select().from(bookings).where(eq(bookings.id, id));
+    return booking || undefined;
+  }
+
+  async createBooking(booking: InsertBooking): Promise<Booking> {
+    const [newBooking] = await db
+      .insert(bookings)
+      .values(booking)
+      .returning();
+    return newBooking;
+  }
+
+  async updateBookingStatus(id: number, status: string): Promise<Booking | undefined> {
+    const [updatedBooking] = await db
+      .update(bookings)
+      .set({ status })
+      .where(eq(bookings.id, id))
+      .returning();
+    return updatedBooking || undefined;
+  }
+
+  async getCartItems(sessionId: string): Promise<CartItem[]> {
+    return await db.select().from(cartItems).where(eq(cartItems.sessionId, sessionId));
+  }
+
+  async addToCart(item: InsertCartItem): Promise<CartItem> {
+    const [newItem] = await db
+      .insert(cartItems)
+      .values(item)
+      .returning();
+    return newItem;
+  }
+
+  async updateCartItem(id: number, quantity: number): Promise<CartItem | undefined> {
+    const [updatedItem] = await db
+      .update(cartItems)
+      .set({ quantity })
+      .where(eq(cartItems.id, id))
+      .returning();
+    return updatedItem || undefined;
+  }
+
+  async removeFromCart(id: number): Promise<boolean> {
+    const result = await db.delete(cartItems).where(eq(cartItems.id, id));
+    return result.rowCount > 0;
+  }
+
+  async clearCart(sessionId: string): Promise<boolean> {
+    const result = await db.delete(cartItems).where(eq(cartItems.sessionId, sessionId));
+    return result.rowCount > 0;
+  }
+}
+
+export const storage = new DatabaseStorage();
