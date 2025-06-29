@@ -13,7 +13,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useLanguage } from '@/hooks/useLanguage';
 import { getTranslation } from '@/lib/i18n';
 import { Link } from 'wouter';
-import { ChevronsRight } from 'lucide-react';
+import { ChevronsRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import useEmblaCarousel from 'embla-carousel-react';
+import { useCallback } from 'react';
 import type { Region, Tour, Product, BlogPost } from '@shared/schema';
 
 export default function Home() {
@@ -23,20 +25,48 @@ export default function Home() {
     queryKey: ['/api/regions'],
   });
 
-  const { data: featuredTours = [], isLoading: toursLoading } = useQuery<Tour[]>({
-    queryKey: ['/api/tours?featured=true'],
+  const { data: tours = [], isLoading: toursLoading } = useQuery<Tour[]>({
+    queryKey: ['/api/tours'],
   });
 
-  const { data: featuredProducts = [], isLoading: productsLoading } = useQuery<Product[]>({
-    queryKey: ['/api/products?featured=true'],
+  const { data: products = [], isLoading: productsLoading } = useQuery<Product[]>({
+    queryKey: ['/api/products'],
   });
 
   const { data: blogPosts = [], isLoading: blogLoading } = useQuery<BlogPost[]>({
     queryKey: ['/api/blog'],
   });
 
-  const featuredRegions = regions.filter(region => region.featured);
   const latestBlogPosts = blogPosts.slice(0, 3);
+
+  // Carousel hooks
+  const [regionsEmblaRef, regionsEmblaApi] = useEmblaCarousel({ loop: false, align: 'start' });
+  const [toursEmblaRef, toursEmblaApi] = useEmblaCarousel({ loop: false, align: 'start' });
+  const [productsEmblaRef, productsEmblaApi] = useEmblaCarousel({ loop: false, align: 'start' });
+
+  const scrollRegionsPrev = useCallback(() => {
+    if (regionsEmblaApi) regionsEmblaApi.scrollPrev();
+  }, [regionsEmblaApi]);
+
+  const scrollRegionsNext = useCallback(() => {
+    if (regionsEmblaApi) regionsEmblaApi.scrollNext();
+  }, [regionsEmblaApi]);
+
+  const scrollToursPrev = useCallback(() => {
+    if (toursEmblaApi) toursEmblaApi.scrollPrev();
+  }, [toursEmblaApi]);
+
+  const scrollToursNext = useCallback(() => {
+    if (toursEmblaApi) toursEmblaApi.scrollNext();
+  }, [toursEmblaApi]);
+
+  const scrollProductsPrev = useCallback(() => {
+    if (productsEmblaApi) productsEmblaApi.scrollPrev();
+  }, [productsEmblaApi]);
+
+  const scrollProductsNext = useCallback(() => {
+    if (productsEmblaApi) productsEmblaApi.scrollNext();
+  }, [productsEmblaApi]);
 
   const galleryImages = [
     "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
@@ -58,19 +88,35 @@ export default function Home() {
       {/* Regions Section */}
       <section id="regions" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-serif font-bold georgian-wine mb-4">
-              Ethnographic Regions of Georgia
-            </h2>
-            <p className="text-xl georgian-gray max-w-3xl mx-auto">
-              From the wine valleys of Kakheti to the mountain peaks of Svaneti, each region tells its own unique story through centuries of tradition, culture, and heritage.
-            </p>
+          <div className="flex justify-between items-center mb-16">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold georgian-wine mb-4">
+                Ethnographic Regions of Georgia
+              </h2>
+              <p className="text-xl georgian-gray max-w-3xl">
+                From the wine valleys of Kakheti to the mountain peaks of Svaneti, each region tells its own unique story through centuries of tradition, culture, and heritage.
+              </p>
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={scrollRegionsPrev}
+                className="p-2 rounded-full bg-georgian-wine hover:bg-georgian-wine/90 text-white transition-colors"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                onClick={scrollRegionsNext}
+                className="p-2 rounded-full bg-georgian-wine hover:bg-georgian-wine/90 text-white transition-colors"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
           {regionsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="space-y-3">
+            <div className="flex space-x-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="flex-none w-80 space-y-3">
                   <Skeleton className="h-48 w-full rounded-xl" />
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-4 w-1/2" />
@@ -78,10 +124,14 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredRegions.map((region) => (
-                <RegionCard key={region.id} region={region} />
-              ))}
+            <div className="overflow-hidden" ref={regionsEmblaRef}>
+              <div className="flex space-x-6">
+                {regions.map((region) => (
+                  <div key={region.id} className="flex-none w-80">
+                    <RegionCard region={region} />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -130,19 +180,35 @@ export default function Home() {
       {/* Tours Section */}
       <section id="tours" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-serif font-bold georgian-wine mb-4">
-              Authentic Georgian Experiences
-            </h2>
-            <p className="text-xl georgian-gray max-w-3xl mx-auto">
-              Join us for carefully crafted tours that immerse you in Georgia's rich cultural heritage, from wine tasting to traditional cooking classes.
-            </p>
+          <div className="flex justify-between items-center mb-16">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold georgian-wine mb-4">
+                Authentic Georgian Experiences
+              </h2>
+              <p className="text-xl georgian-gray max-w-3xl">
+                Join us for carefully crafted tours that immerse you in Georgia's rich cultural heritage, from wine tasting to traditional cooking classes.
+              </p>
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={scrollToursPrev}
+                className="p-2 rounded-full bg-georgian-wine hover:bg-georgian-wine/90 text-white transition-colors"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                onClick={scrollToursNext}
+                className="p-2 rounded-full bg-georgian-wine hover:bg-georgian-wine/90 text-white transition-colors"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
           {toursLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="space-y-3">
+            <div className="flex space-x-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="flex-none w-80 space-y-3">
                   <Skeleton className="h-48 w-full rounded-xl" />
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-4 w-1/2" />
@@ -150,10 +216,14 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredTours.map((tour) => (
-                <TourCard key={tour.id} tour={tour} />
-              ))}
+            <div className="overflow-hidden" ref={toursEmblaRef}>
+              <div className="flex space-x-6">
+                {tours.map((tour) => (
+                  <div key={tour.id} className="flex-none w-80">
+                    <TourCard tour={tour} />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
@@ -174,19 +244,35 @@ export default function Home() {
       {/* Store Section */}
       <section id="store" className="py-20 bg-georgian-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-serif font-bold georgian-wine mb-4">
-              Authentic Georgian Products
-            </h2>
-            <p className="text-xl georgian-gray max-w-3xl mx-auto">
-              Take home the taste and craftsmanship of Georgia with our curated selection of wines, artisanal crafts, and traditional delicacies.
-            </p>
+          <div className="flex justify-between items-center mb-16">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold georgian-wine mb-4">
+                Authentic Georgian Products
+              </h2>
+              <p className="text-xl georgian-gray max-w-3xl">
+                Take home the taste and craftsmanship of Georgia with our curated selection of wines, artisanal crafts, and traditional delicacies.
+              </p>
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={scrollProductsPrev}
+                className="p-2 rounded-full bg-georgian-wine hover:bg-georgian-wine/90 text-white transition-colors"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                onClick={scrollProductsNext}
+                className="p-2 rounded-full bg-georgian-wine hover:bg-georgian-wine/90 text-white transition-colors"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
           {productsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="flex space-x-6">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="space-y-3">
+                <div key={i} className="flex-none w-72 space-y-3">
                   <Skeleton className="h-48 w-full rounded-xl" />
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-4 w-1/2" />
@@ -194,10 +280,14 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+            <div className="overflow-hidden" ref={productsEmblaRef}>
+              <div className="flex space-x-6">
+                {products.map((product) => (
+                  <div key={product.id} className="flex-none w-72">
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
