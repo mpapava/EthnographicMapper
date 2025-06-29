@@ -124,13 +124,18 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="overflow-hidden" ref={regionsEmblaRef}>
-              <div className="flex space-x-6">
-                {regions.map((region) => (
-                  <div key={region.id} className="flex-none w-80">
-                    <RegionCard region={region} />
-                  </div>
-                ))}
+            <div className="relative">
+              <div className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-georgian-wine scrollbar-track-gray-200" ref={regionsEmblaRef}>
+                <div className="flex space-x-6 pb-4">
+                  {regions.map((region) => (
+                    <div key={region.id} className="flex-none w-80">
+                      <RegionCard region={region} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs text-georgian-gray bg-white/80 px-3 py-1 rounded-full">
+                Scroll horizontally to see more regions
               </div>
             </div>
           )}
@@ -216,13 +221,18 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="overflow-hidden" ref={toursEmblaRef}>
-              <div className="flex space-x-6">
-                {tours.map((tour) => (
-                  <div key={tour.id} className="flex-none w-80">
-                    <TourCard tour={tour} />
-                  </div>
-                ))}
+            <div className="relative">
+              <div className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-georgian-wine scrollbar-track-gray-200" ref={toursEmblaRef}>
+                <div className="flex space-x-6 pb-4">
+                  {tours.map((tour) => (
+                    <div key={tour.id} className="flex-none w-80">
+                      <TourCard tour={tour} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs text-georgian-gray bg-white/80 px-3 py-1 rounded-full">
+                Scroll horizontally to see more tours
               </div>
             </div>
           )}
@@ -280,13 +290,18 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="overflow-hidden" ref={productsEmblaRef}>
-              <div className="flex space-x-6">
-                {products.map((product) => (
-                  <div key={product.id} className="flex-none w-72">
-                    <ProductCard product={product} />
-                  </div>
-                ))}
+            <div className="relative">
+              <div className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-georgian-wine scrollbar-track-gray-200" ref={productsEmblaRef}>
+                <div className="flex space-x-6 pb-4">
+                  {products.map((product) => (
+                    <div key={product.id} className="flex-none w-72">
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs text-georgian-gray bg-white/80 px-3 py-1 rounded-full">
+                Scroll horizontally to see more products
               </div>
             </div>
           )}
