@@ -1,9 +1,17 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Menu, X, ShoppingCart } from 'lucide-react';
+import { Menu, X, ShoppingCart, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useLanguage } from '@/hooks/useLanguage';
+import { useAuth } from '@/hooks/useAuth';
 import { getTranslation, Language } from '@/lib/i18n';
 import { useQuery } from '@tanstack/react-query';
 
@@ -11,6 +19,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location] = useLocation();
   const { language, setLanguage } = useLanguage();
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   // Cart items count
   const { data: cartItems = [] } = useQuery({
@@ -91,6 +100,59 @@ export default function Header() {
               </Button>
             </Link>
 
+            {/* Authentication */}
+            {!isLoading && (
+              <>
+                {isAuthenticated ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                        {user?.profileImageUrl ? (
+                          <img
+                            className="h-8 w-8 rounded-full object-cover"
+                            src={user.profileImageUrl}
+                            alt="Profile"
+                          />
+                        ) : (
+                          <User className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end" forceMount>
+                      <DropdownMenuItem className="flex flex-col items-start">
+                        <div className="text-sm font-medium">
+                          {user?.firstName || user?.lastName 
+                            ? `${user.firstName || ''} ${user.lastName || ''}`.trim()
+                            : 'Welcome!'}
+                        </div>
+                        {user?.email && (
+                          <div className="text-xs text-muted-foreground">{user.email}</div>
+                        )}
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => window.location.href = '/api/logout'}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Log out</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <div className="hidden md:flex items-center space-x-2">
+                    <Link href="/login">
+                      <Button variant="ghost" className="text-georgian-gray hover:text-georgian-wine">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link href="/register">
+                      <Button className="bg-georgian-wine hover:bg-georgian-wine/90 text-white">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </>
+            )}
+
             {/* Mobile menu button */}
             <div className="md:hidden">
               <Button
@@ -122,6 +184,48 @@ export default function Header() {
                   {getTranslation(key, language)}
                 </Link>
               ))}
+              
+              {/* Mobile Authentication */}
+              {!isLoading && (
+                <div className="border-t pt-2 mt-2">
+                  {isAuthenticated ? (
+                    <>
+                      <div className="px-3 py-2 text-sm font-medium text-georgian-wine">
+                        {user?.firstName || user?.lastName 
+                          ? `${user.firstName || ''} ${user.lastName || ''}`.trim()
+                          : 'Welcome!'}
+                      </div>
+                      <button
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          window.location.href = '/api/logout';
+                        }}
+                        className="block w-full text-left px-3 py-2 text-base font-medium text-georgian-gray hover:text-georgian-wine"
+                      >
+                        <LogOut className="inline mr-2 h-4 w-4" />
+                        Log out
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/login"
+                        className="block px-3 py-2 text-base font-medium text-georgian-gray hover:text-georgian-wine"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        href="/register"
+                        className="block px-3 py-2 text-base font-medium text-white bg-georgian-wine hover:bg-georgian-wine/90 rounded mx-3 text-center"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Sign Up
+                      </Link>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
