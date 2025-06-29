@@ -134,9 +134,7 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs text-georgian-gray bg-white/80 px-3 py-1 rounded-full">
-                Scroll horizontally to see more regions
-              </div>
+
             </div>
           )}
         </div>
@@ -231,9 +229,7 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs text-georgian-gray bg-white/80 px-3 py-1 rounded-full">
-                Scroll horizontally to see more tours
-              </div>
+
             </div>
           )}
 
@@ -300,9 +296,7 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs text-georgian-gray bg-white/80 px-3 py-1 rounded-full">
-                Scroll horizontally to see more products
-              </div>
+
             </div>
           )}
 

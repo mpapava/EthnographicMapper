@@ -102,6 +102,7 @@ The application uses a comprehensive database schema with the following main ent
 
 ## Changelog
 
+- June 29, 2025. Fixed all broken image URLs (Samegrelo, Javakheti regions, Samegrelo Cultural Experience tour, Imereti Cave Exploration tour, Georgian Chacha product), removed scroll caption texts from all sliders, added 5 new Georgian cultural blog stories covering Queen Tamar, polyphonic singing, cloisonné metalwork, sacred mountains, and Georgian script
 - June 29, 2025. Fixed broken image URLs for Svaneti and Samegrelo regions, added 4 additional tours and 5 additional products to enhance slider content, implemented visible scrollbars with custom styling for all horizontal sliders (regions, tours, products), added scroll indicators to improve user experience
 - June 29, 2025. Added PostgreSQL database with Drizzle ORM, migrated from in-memory storage to persistent database storage, seeded with Georgian heritage data
 - June 28, 2025. Initial setup
