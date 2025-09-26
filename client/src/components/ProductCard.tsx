@@ -67,6 +67,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         src={product.imageUrl}
         alt={getName()}
         className="w-full h-48 object-cover group-hover:scale-105 transition-transform"
+        loading="lazy"
+        decoding="async"
       />
       <CardContent className="p-4">
         <h3 className="text-lg font-serif font-bold georgian-wine mb-2">

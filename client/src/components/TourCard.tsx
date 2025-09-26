@@ -58,6 +58,8 @@ export default function TourCard({ tour }: TourCardProps) {
         src={tour.imageUrl}
         alt={getTitle()}
         className="w-full h-48 object-cover"
+        loading="lazy"
+        decoding="async"
       />
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">

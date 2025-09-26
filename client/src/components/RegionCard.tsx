@@ -35,6 +35,8 @@ export default function RegionCard({ region }: RegionCardProps) {
             src={region.imageUrl}
             alt={getName()}
             className="w-full h-48 object-cover"
+            loading="lazy"
+            decoding="async"
           />
           <CardContent className="p-6">
             <h3 className="text-2xl font-serif font-bold georgian-wine mb-2">

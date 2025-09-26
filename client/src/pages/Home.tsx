@@ -39,10 +39,28 @@ export default function Home() {
 
   const latestBlogPosts = blogPosts.slice(0, 3);
 
-  // Carousel hooks
-  const [regionsEmblaRef, regionsEmblaApi] = useEmblaCarousel({ loop: false, align: 'start' });
-  const [toursEmblaRef, toursEmblaApi] = useEmblaCarousel({ loop: false, align: 'start' });
-  const [productsEmblaRef, productsEmblaApi] = useEmblaCarousel({ loop: false, align: 'start' });
+  // Carousel hooks with mobile performance optimizations
+  const [regionsEmblaRef, regionsEmblaApi] = useEmblaCarousel({ 
+    loop: false, 
+    align: 'start',
+    dragFree: true,
+    containScroll: 'trimSnaps',
+    inViewThreshold: 0.7
+  });
+  const [toursEmblaRef, toursEmblaApi] = useEmblaCarousel({ 
+    loop: false, 
+    align: 'start',
+    dragFree: true,
+    containScroll: 'trimSnaps',
+    inViewThreshold: 0.7
+  });
+  const [productsEmblaRef, productsEmblaApi] = useEmblaCarousel({ 
+    loop: false, 
+    align: 'start',
+    dragFree: true,
+    containScroll: 'trimSnaps',
+    inViewThreshold: 0.7
+  });
 
   const scrollRegionsPrev = useCallback(() => {
     if (regionsEmblaApi) regionsEmblaApi.scrollPrev();
@@ -125,8 +143,8 @@ export default function Home() {
             </div>
           ) : (
             <div className="relative">
-              <div className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-georgian-wine scrollbar-track-gray-200" ref={regionsEmblaRef}>
-                <div className="flex space-x-6 pb-4">
+              <div className="embla overflow-hidden" ref={regionsEmblaRef} style={{ touchAction: 'pan-y' }}>
+                <div className="flex space-x-6 pb-4" style={{ willChange: 'transform' }}>
                   {regions.map((region) => (
                     <div key={region.id} className="flex-none w-80">
                       <RegionCard region={region} />
@@ -220,8 +238,8 @@ export default function Home() {
             </div>
           ) : (
             <div className="relative">
-              <div className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-georgian-wine scrollbar-track-gray-200" ref={toursEmblaRef}>
-                <div className="flex space-x-6 pb-4">
+              <div className="embla overflow-hidden" ref={toursEmblaRef} style={{ touchAction: 'pan-y' }}>
+                <div className="flex space-x-6 pb-4" style={{ willChange: 'transform' }}>
                   {tours.map((tour) => (
                     <div key={tour.id} className="flex-none w-80">
                       <TourCard tour={tour} />
@@ -287,8 +305,8 @@ export default function Home() {
             </div>
           ) : (
             <div className="relative">
-              <div className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-georgian-wine scrollbar-track-gray-200" ref={productsEmblaRef}>
-                <div className="flex space-x-6 pb-4">
+              <div className="embla overflow-hidden" ref={productsEmblaRef} style={{ touchAction: 'pan-y' }}>
+                <div className="flex space-x-6 pb-4" style={{ willChange: 'transform' }}>
                   {products.map((product) => (
                     <div key={product.id} className="flex-none w-72">
                       <ProductCard product={product} />
