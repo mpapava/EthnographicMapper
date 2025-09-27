@@ -52,40 +52,40 @@ export default function Contact() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {/* Address */}
-            <div className="text-center p-6 bg-georgian-cream rounded-xl">
+            <div className="text-center p-6 bg-georgian-cream rounded-xl" data-testid="contact-address">
               <MapPin className="h-12 w-12 georgian-wine mx-auto mb-4" />
               <h3 className="text-lg font-serif font-bold georgian-wine mb-3">Address</h3>
-              <p className="georgian-gray">
+              <p className="georgian-gray" data-testid="address-details">
                 Rustaveli Avenue 12<br />
                 Tbilisi 0108, Georgia
               </p>
             </div>
 
             {/* Phone */}
-            <div className="text-center p-6 bg-georgian-cream rounded-xl">
+            <div className="text-center p-6 bg-georgian-cream rounded-xl" data-testid="contact-phone">
               <Phone className="h-12 w-12 georgian-wine mx-auto mb-4" />
               <h3 className="text-lg font-serif font-bold georgian-wine mb-3">Phone</h3>
-              <p className="georgian-gray">
+              <p className="georgian-gray" data-testid="phone-numbers">
                 +995 32 200 0000<br />
                 +995 599 123 456
               </p>
             </div>
 
             {/* Email */}
-            <div className="text-center p-6 bg-georgian-cream rounded-xl">
+            <div className="text-center p-6 bg-georgian-cream rounded-xl" data-testid="contact-email">
               <Mail className="h-12 w-12 georgian-wine mx-auto mb-4" />
               <h3 className="text-lg font-serif font-bold georgian-wine mb-3">Email</h3>
-              <p className="georgian-gray">
+              <p className="georgian-gray" data-testid="email-addresses">
                 info@georgianheritage.com<br />
                 tours@georgianheritage.com
               </p>
             </div>
 
             {/* Hours */}
-            <div className="text-center p-6 bg-georgian-cream rounded-xl">
+            <div className="text-center p-6 bg-georgian-cream rounded-xl" data-testid="contact-hours">
               <Clock className="h-12 w-12 georgian-wine mx-auto mb-4" />
               <h3 className="text-lg font-serif font-bold georgian-wine mb-3">Business Hours</h3>
-              <p className="georgian-gray text-sm">
+              <p className="georgian-gray text-sm" data-testid="business-hours">
                 Mon - Fri: 9:00 AM - 6:00 PM<br />
                 Sat: 10:00 AM - 4:00 PM<br />
                 Sun: Closed
