@@ -275,6 +275,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin-only user management
+  app.put("/api/admin/users/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = req.params.id;
+      const updateData = req.body;
+      
+      const updatedUser = await storage.updateUser(id, updateData);
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ error: "Failed to update user" });
+    }
+  });
+
+  // Admin-only tour management
+  app.put("/api/admin/tours/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updateData = req.body;
+      
+      const updatedTour = await storage.updateTour(id, updateData);
+      if (!updatedTour) {
+        return res.status(404).json({ error: "Tour not found" });
+      }
+      
+      res.json(updatedTour);
+    } catch (error) {
+      console.error("Error updating tour:", error);
+      res.status(500).json({ error: "Failed to update tour" });
+    }
+  });
+
+  // Admin-only product management
+  app.put("/api/admin/products/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updateData = req.body;
+      
+      const updatedProduct = await storage.updateProduct(id, updateData);
+      if (!updatedProduct) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+      
+      res.json(updatedProduct);
+    } catch (error) {
+      console.error("Error updating product:", error);
+      res.status(500).json({ error: "Failed to update product" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

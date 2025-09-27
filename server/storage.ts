@@ -19,6 +19,7 @@ export interface IStorage {
   createUser(userData: { username: string; email: string; password: string; firstName?: string; lastName?: string; role?: string }): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
   getAllUsers(): Promise<User[]>;
+  updateUser(id: string, userData: Partial<InsertUser> & { newPassword?: string }): Promise<User | undefined>;
   updateUserRole(id: string, role: string): Promise<User | undefined>;
   updateUserStatus(id: string, isActive: boolean): Promise<User | undefined>;
   
@@ -449,6 +450,22 @@ export class MemStorage implements IStorage {
     return Array.from(this.users.values());
   }
 
+  async updateUser(id: string, userData: Partial<InsertUser> & { newPassword?: string }): Promise<User | undefined> {
+    const user = await this.getUser(id);
+    if (!user) return undefined;
+    
+    const updateData: any = { ...userData };
+    delete updateData.newPassword; // Handle password separately if needed
+    
+    const updatedUser = { 
+      ...user, 
+      ...updateData,
+      updatedAt: new Date() 
+    };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
   async updateUserRole(id: string, role: string): Promise<User | undefined> {
     const user = await this.getUser(id);
     if (!user) return undefined;
@@ -767,6 +784,18 @@ export class DatabaseStorage implements IStorage {
 
   async getAllUsers(): Promise<User[]> {
     return await db.select().from(users);
+  }
+
+  async updateUser(id: string, userData: Partial<InsertUser> & { newPassword?: string }): Promise<User | undefined> {
+    const updateData: any = { ...userData };
+    delete updateData.newPassword; // Handle password separately if needed
+    
+    const [updatedUser] = await db
+      .update(users)
+      .set({ ...updateData, updatedAt: new Date() })
+      .where(eq(users.id, id))
+      .returning();
+    return updatedUser || undefined;
   }
 
   async updateUserRole(id: string, role: string): Promise<User | undefined> {
