@@ -7,10 +7,16 @@ interface FlagLanguageSelectorProps {
   triggerClassName?: string;
 }
 
-const languageFlags = {
-  en: '🇺🇸',
-  ka: '🇬🇪', 
-  ru: '🇷🇺'
+const FlagIcon = ({ country }: { country: string }) => {
+  const flagStyles = {
+    en: 'bg-gradient-to-r from-blue-600 via-white to-red-600',
+    ka: 'bg-gradient-to-r from-white via-red-600 to-white', 
+    ru: 'bg-gradient-to-b from-white via-blue-600 to-red-600'
+  };
+  
+  return (
+    <div className={`w-6 h-4 rounded-sm border border-gray-300 ${flagStyles[country as keyof typeof flagStyles]}`} />
+  );
 };
 
 
@@ -20,17 +26,17 @@ export default function FlagLanguageSelector({ className, triggerClassName }: Fl
   return (
     <Select value={language} onValueChange={(value: Language) => setLanguage(value)}>
       <SelectTrigger className={triggerClassName} data-testid="language-selector-trigger">
-        <span className="text-lg">{languageFlags[language]}</span>
+        <FlagIcon country={language} />
       </SelectTrigger>
       <SelectContent className={className}>
         <SelectItem value="en" data-testid="language-option-en">
-          <span className="text-lg">{languageFlags.en}</span>
+          <FlagIcon country="en" />
         </SelectItem>
         <SelectItem value="ka" data-testid="language-option-ka">
-          <span className="text-lg">{languageFlags.ka}</span>
+          <FlagIcon country="ka" />
         </SelectItem>
         <SelectItem value="ru" data-testid="language-option-ru">
-          <span className="text-lg">{languageFlags.ru}</span>
+          <FlagIcon country="ru" />
         </SelectItem>
       </SelectContent>
     </Select>
