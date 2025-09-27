@@ -12,6 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Shield, Users, UserCheck, UserX, Crown, Map, Plane, Store, Edit, Trash2 } from "lucide-react";
 import RegionEditForm from "@/components/RegionEditForm";
+import { UserEditForm } from "@/components/UserEditForm";
+import { TourEditForm } from "@/components/TourEditForm";
+import { ProductEditForm } from "@/components/ProductEditForm";
 
 interface User {
   id: string;
@@ -92,6 +95,15 @@ export default function Admin() {
   // Edit states
   const [editingRegion, setEditingRegion] = useState<Region | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [isUserEditModalOpen, setIsUserEditModalOpen] = useState(false);
+  
+  const [editingTour, setEditingTour] = useState<Tour | null>(null);
+  const [isTourEditModalOpen, setIsTourEditModalOpen] = useState(false);
+  
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isProductEditModalOpen, setIsProductEditModalOpen] = useState(false);
 
   // Redirect if not authenticated or not admin
   useEffect(() => {
@@ -316,6 +328,132 @@ export default function Admin() {
     setEditingRegion(null);
   };
 
+  // User editing functions
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    setIsUserEditModalOpen(true);
+  };
+
+  const handleSaveUser = async (userId: string, data: any) => {
+    try {
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update user");
+      }
+
+      const updatedUser = await response.json();
+      setUsers(users.map(u => u.id === userId ? updatedUser : u));
+      
+      toast({
+        title: "Success",
+        description: "User updated successfully",
+      });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to update user";
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      throw err;
+    }
+  };
+
+  const closeUserEditModal = () => {
+    setIsUserEditModalOpen(false);
+    setEditingUser(null);
+  };
+
+  // Tour editing functions
+  const handleEditTour = (tour: Tour) => {
+    setEditingTour(tour);
+    setIsTourEditModalOpen(true);
+  };
+
+  const handleSaveTour = async (tourId: number, data: any) => {
+    try {
+      const response = await fetch(`/api/admin/tours/${tourId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update tour");
+      }
+
+      const updatedTour = await response.json();
+      setTours(tours.map(t => t.id === tourId ? updatedTour : t));
+      
+      toast({
+        title: "Success",
+        description: "Tour updated successfully",
+      });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to update tour";
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      throw err;
+    }
+  };
+
+  const closeTourEditModal = () => {
+    setIsTourEditModalOpen(false);
+    setEditingTour(null);
+  };
+
+  // Product editing functions
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    setIsProductEditModalOpen(true);
+  };
+
+  const handleSaveProduct = async (productId: number, data: any) => {
+    try {
+      const response = await fetch(`/api/admin/products/${productId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update product");
+      }
+
+      const updatedProduct = await response.json();
+      setProducts(products.map(p => p.id === productId ? updatedProduct : p));
+      
+      toast({
+        title: "Success",
+        description: "Product updated successfully",
+      });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to update product";
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      throw err;
+    }
+  };
+
+  const closeProductEditModal = () => {
+    setIsProductEditModalOpen(false);
+    setEditingProduct(null);
+  };
+
   if (!isAuthenticated || !isAdmin) {
     return null;
   }
@@ -451,7 +589,12 @@ export default function Admin() {
                               {new Date(userData.createdAt).toLocaleDateString()}
                             </TableCell>
                             <TableCell>
-                              <Button variant="ghost" size="sm">
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => handleEditUser(userData)}
+                                data-testid={`edit-user-${userData.id}`}
+                              >
                                 <Edit className="h-4 w-4" />
                               </Button>
                             </TableCell>
@@ -596,7 +739,12 @@ export default function Admin() {
                             </TableCell>
                             <TableCell>
                               <div className="flex space-x-2">
-                                <Button variant="ghost" size="sm">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => handleEditTour(tour)}
+                                  data-testid={`edit-tour-${tour.id}`}
+                                >
                                   <Edit className="h-4 w-4" />
                                 </Button>
                                 <Button variant="ghost" size="sm">
@@ -672,7 +820,12 @@ export default function Admin() {
                             </TableCell>
                             <TableCell>
                               <div className="flex space-x-2">
-                                <Button variant="ghost" size="sm">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => handleEditProduct(product)}
+                                  data-testid={`edit-product-${product.id}`}
+                                >
                                   <Edit className="h-4 w-4" />
                                 </Button>
                                 <Button variant="ghost" size="sm">
@@ -697,6 +850,31 @@ export default function Admin() {
           isOpen={isEditModalOpen}
           onClose={closeEditModal}
           onSave={handleSaveRegion}
+        />
+
+        {/* User Edit Modal */}
+        <UserEditForm
+          user={editingUser}
+          isOpen={isUserEditModalOpen}
+          onClose={closeUserEditModal}
+          onSave={handleSaveUser}
+        />
+
+        {/* Tour Edit Modal */}
+        <TourEditForm
+          tour={editingTour}
+          regions={regions}
+          isOpen={isTourEditModalOpen}
+          onClose={closeTourEditModal}
+          onSave={handleSaveTour}
+        />
+
+        {/* Product Edit Modal */}
+        <ProductEditForm
+          product={editingProduct}
+          isOpen={isProductEditModalOpen}
+          onClose={closeProductEditModal}
+          onSave={handleSaveProduct}
         />
       </div>
     </div>
