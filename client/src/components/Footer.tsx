@@ -1,6 +1,7 @@
 import { Link } from 'wouter';
 import { useLanguage } from '@/hooks/useLanguage';
 import { getTranslation } from '@/lib/i18n';
+import FlagLanguageSelector from '@/components/FlagLanguageSelector';
 
 export default function Footer() {
   const { language } = useLanguage();
@@ -27,6 +28,15 @@ export default function Footer() {
               <a href="#" className="text-gray-300 hover:text-white transition-colors">
                 <i className="fab fa-tripadvisor"></i>
               </a>
+            </div>
+            
+            {/* Language Selector in Footer */}
+            <div className="mt-6">
+              <h4 className="text-sm font-semibold mb-3 text-gray-300">Language</h4>
+              <FlagLanguageSelector 
+                triggerClassName="w-auto bg-white/10 border-white/20 text-white hover:bg-white/20" 
+                className="bg-white"
+              />
             </div>
           </div>
 

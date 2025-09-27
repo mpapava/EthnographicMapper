@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Menu, X, ShoppingCart, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import FlagLanguageSelector from '@/components/FlagLanguageSelector';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -77,16 +77,9 @@ export default function Header() {
 
           <div className="flex items-center space-x-4">
             {/* Language Selector */}
-            <Select value={language} onValueChange={(value: Language) => setLanguage(value)}>
-              <SelectTrigger className="w-16 border-none bg-transparent georgian-gray">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">EN</SelectItem>
-                <SelectItem value="ka">ქართ</SelectItem>
-                <SelectItem value="ru">РУ</SelectItem>
-              </SelectContent>
-            </Select>
+            <FlagLanguageSelector 
+              triggerClassName="w-auto border-none bg-transparent georgian-gray px-2"
+            />
 
             {/* Shopping Cart */}
             <Link href="/store">
