@@ -1,32 +1,67 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { UserCircle, ArrowRight, Shield, Globe } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
+import { Globe } from "lucide-react";
+
+const loginSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { login, isAuthenticated, isLoading } = useAuth();
   const [, setLocation] = useLocation();
+  const [error, setError] = useState("");
+  const { toast } = useToast();
 
-  useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      setLocation("/");
-    }
-  }, [isAuthenticated, isLoading, setLocation]);
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-georgian-wine/5 to-georgian-gold/5">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-georgian-wine"></div>
-      </div>
-    );
-  }
-
+  // Redirect if already authenticated
   if (isAuthenticated) {
+    setLocation("/");
     return null;
   }
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      setError("");
+      await login(data.username, data.password);
+      
+      toast({
+        title: "Login successful",
+        description: "Welcome back!",
+      });
+      
+      // Redirect to home page after successful login
+      setLocation("/");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Login failed";
+      setError(errorMessage);
+      
+      toast({
+        title: "Login failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-georgian-wine/5 to-georgian-gold/5 p-4">
@@ -48,54 +83,79 @@ export default function Login() {
               Sign in to access your account and continue exploring Georgian heritage
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Login Button */}
-            <Button 
-              onClick={() => window.location.href = '/api/login'}
-              className="w-full bg-georgian-wine hover:bg-georgian-wine/90 text-white py-6 text-base font-medium"
-              size="lg"
-            >
-              <UserCircle className="mr-2 h-5 w-5" />
-              Sign In with Replit
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-
-            <Separator className="my-4" />
-
-            {/* Features */}
-            <div className="space-y-3 text-sm text-georgian-gray">
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-georgian-gold rounded-full flex-shrink-0"></div>
-                <span>Access exclusive cultural tours and experiences</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-georgian-gold rounded-full flex-shrink-0"></div>
-                <span>Save your favorite regions and stories</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-georgian-gold rounded-full flex-shrink-0"></div>
-                <span>Purchase authentic Georgian products</span>
-              </div>
-            </div>
-
-            {/* Security Notice */}
-            <div className="flex items-start gap-2 p-3 bg-georgian-wine/5 rounded-lg">
-              <Shield className="h-4 w-4 text-georgian-wine mt-0.5 flex-shrink-0" />
-              <div className="text-xs text-georgian-gray">
-                <p className="font-medium text-georgian-wine mb-1">Secure Authentication</p>
-                <p>Your account is protected with secure authentication. We never store your password.</p>
-              </div>
+          <CardContent>
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="text"
+                          placeholder="Enter your username"
+                          disabled={form.formState.isSubmitting}
+                          data-testid="input-username"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="password"
+                          placeholder="Enter your password"
+                          disabled={form.formState.isSubmitting}
+                          data-testid="input-password"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <Button
+                  type="submit"
+                  className="w-full bg-georgian-wine hover:bg-georgian-wine/90 text-white"
+                  disabled={form.formState.isSubmitting}
+                  data-testid="button-login"
+                  size="lg"
+                >
+                  {form.formState.isSubmitting ? "Signing in..." : "Sign In"}
+                </Button>
+              </form>
+            </Form>
+            
+            <div className="mt-6 text-center">
+              <p className="text-sm text-georgian-gray">
+                Don't have an account?{" "}
+                <Link href="/register" data-testid="link-register">
+                  <span className="font-medium text-georgian-wine hover:text-georgian-wine/80 cursor-pointer">
+                    Create one here
+                  </span>
+                </Link>
+              </p>
             </div>
           </CardContent>
         </Card>
-
-        {/* Footer */}
-        <div className="text-center text-xs text-georgian-gray">
-          <p>Don't have an account? Registration happens automatically when you sign in.</p>
-          <p className="mt-1">
-            By signing in, you agree to explore Georgia's rich cultural heritage responsibly.
-          </p>
-        </div>
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location] = useLocation();
   const { language, setLanguage } = useLanguage();
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading, logout, isAdmin } = useAuth();
 
   // Cart items count
   const { data: cartItems = [] } = useQuery({
@@ -123,7 +123,18 @@ export default function Header() {
                         )}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => window.location.href = '/api/logout'}>
+                      {isAdmin && (
+                        <>
+                          <DropdownMenuItem asChild>
+                            <Link href="/admin" className="flex items-center">
+                              <User className="mr-2 h-4 w-4" />
+                              <span>Admin Panel</span>
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
+                      <DropdownMenuItem onClick={logout}>
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Log out</span>
                       </DropdownMenuItem>
@@ -188,10 +199,20 @@ export default function Header() {
                           ? `${user.firstName || ''} ${user.lastName || ''}`.trim()
                           : 'Welcome!'}
                       </div>
+                      {isAdmin && (
+                        <Link
+                          href="/admin"
+                          className="block px-3 py-2 text-base font-medium text-georgian-gray hover:text-georgian-wine"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <User className="inline mr-2 h-4 w-4" />
+                          Admin Panel
+                        </Link>
+                      )}
                       <button
                         onClick={() => {
                           setIsMenuOpen(false);
-                          window.location.href = '/api/logout';
+                          logout();
                         }}
                         className="block w-full text-left px-3 py-2 text-base font-medium text-georgian-gray hover:text-georgian-wine"
                       >
