@@ -102,6 +102,7 @@ The application uses a comprehensive database schema with the following main ent
 
 ## Changelog
 
+- September 27, 2025. Completed comprehensive username/password authentication system implementation: created full-stack authentication with user registration, login, logout functionality; implemented admin control panel with user management capabilities; added role-based access control (user/admin roles); integrated bcrypt password hashing and PostgreSQL session storage; updated header navigation with authentication state management; fixed critical DatabaseStorage class missing methods; all functionality tested end-to-end and working perfectly
 - June 29, 2025. Added login and registration pages with full authentication integration, updated header navigation to include login/register buttons for unauthenticated users and user dropdown for authenticated users, includes mobile menu support
 - June 29, 2025. Fixed all broken image URLs (Samegrelo, Javakheti regions, Samegrelo Cultural Experience tour, Imereti Cave Exploration tour, Georgian Chacha product), removed scroll caption texts from all sliders, added 5 new Georgian cultural blog stories covering Queen Tamar, polyphonic singing, cloisonné metalwork, sacred mountains, and Georgian script
 - June 29, 2025. Fixed broken image URLs for Svaneti and Samegrelo regions, added 4 additional tours and 5 additional products to enhance slider content, implemented visible scrollbars with custom styling for all horizontal sliders (regions, tours, products), added scroll indicators to improve user experience
