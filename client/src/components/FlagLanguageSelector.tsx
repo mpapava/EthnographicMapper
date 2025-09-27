@@ -13,11 +13,6 @@ const languageFlags = {
   ru: '🇷🇺'
 };
 
-const languageNames = {
-  en: 'English',
-  ka: 'ქართული',
-  ru: 'Русский'
-};
 
 export default function FlagLanguageSelector({ className, triggerClassName }: FlagLanguageSelectorProps) {
   const { language, setLanguage } = useLanguage();
@@ -25,26 +20,17 @@ export default function FlagLanguageSelector({ className, triggerClassName }: Fl
   return (
     <Select value={language} onValueChange={(value: Language) => setLanguage(value)}>
       <SelectTrigger className={triggerClassName} data-testid="language-selector-trigger">
-        <SelectValue />
+        <span className="text-lg">{languageFlags[language]}</span>
       </SelectTrigger>
       <SelectContent className={className}>
         <SelectItem value="en" data-testid="language-option-en">
-          <div className="flex items-center space-x-2">
-            <span className="text-lg">{languageFlags.en}</span>
-            <span>{languageNames.en}</span>
-          </div>
+          <span className="text-lg">{languageFlags.en}</span>
         </SelectItem>
         <SelectItem value="ka" data-testid="language-option-ka">
-          <div className="flex items-center space-x-2">
-            <span className="text-lg">{languageFlags.ka}</span>
-            <span>{languageNames.ka}</span>
-          </div>
+          <span className="text-lg">{languageFlags.ka}</span>
         </SelectItem>
         <SelectItem value="ru" data-testid="language-option-ru">
-          <div className="flex items-center space-x-2">
-            <span className="text-lg">{languageFlags.ru}</span>
-            <span>{languageNames.ru}</span>
-          </div>
+          <span className="text-lg">{languageFlags.ru}</span>
         </SelectItem>
       </SelectContent>
     </Select>
