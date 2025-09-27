@@ -7,11 +7,22 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
+import session from "express-session";
+import connectPg from "connect-pg-simple";
+import createMemoryStore from "memorystore";
 
 export interface IStorage {
-  // Users (mandatory for Replit Auth)
+  // Users (supports both Replit Auth and username/password auth)
   getUser(id: string): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(userData: { username: string; email: string; password: string; firstName?: string; lastName?: string; role?: string }): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
+  getAllUsers(): Promise<User[]>;
+  updateUserRole(id: string, role: string): Promise<User | undefined>;
+  updateUserStatus(id: string, isActive: boolean): Promise<User | undefined>;
+  
+  // Session store for authentication
+  sessionStore: session.SessionStore;
 
   // Regions
   getAllRegions(): Promise<Region[]>;
@@ -87,6 +98,8 @@ export class MemStorage implements IStorage {
   private currentContactId: number;
   private currentBookingId: number;
   private currentCartItemId: number;
+  
+  public sessionStore: session.SessionStore;
 
   constructor() {
     this.users = new Map();
@@ -105,6 +118,12 @@ export class MemStorage implements IStorage {
     this.currentContactId = 1;
     this.currentBookingId = 1;
     this.currentCartItemId = 1;
+
+    // Initialize session store for authentication
+    const MemoryStore = createMemoryStore(session);
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    });
 
     this.initializeData();
   }
@@ -399,6 +418,52 @@ export class MemStorage implements IStorage {
       this.users.set(userData.id, newUser);
       return newUser;
     }
+  }
+
+  // New authentication methods for username/password auth
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.username === username);
+  }
+
+  async createUser(userData: { username: string; email: string; password: string; firstName?: string; lastName?: string; role?: string }): Promise<User> {
+    const id = `user_${this.currentUserId++}`;
+    const newUser: User = {
+      id,
+      username: userData.username,
+      email: userData.email,
+      passwordHash: userData.password, // Will be hashed by auth layer
+      firstName: userData.firstName || null,
+      lastName: userData.lastName || null,
+      profileImageUrl: null,
+      role: userData.role || 'user',
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.users.set(id, newUser);
+    return newUser;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+
+  async updateUserRole(id: string, role: string): Promise<User | undefined> {
+    const user = await this.getUser(id);
+    if (!user) return undefined;
+    
+    const updatedUser = { ...user, role, updatedAt: new Date() };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  async updateUserStatus(id: string, isActive: boolean): Promise<User | undefined> {
+    const user = await this.getUser(id);
+    if (!user) return undefined;
+    
+    const updatedUser = { ...user, isActive, updatedAt: new Date() };
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
 
   // Region methods
