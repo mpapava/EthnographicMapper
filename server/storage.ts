@@ -10,6 +10,7 @@ import { eq } from "drizzle-orm";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import createMemoryStore from "memorystore";
+import { v4 as uuidv4 } from "uuid";
 
 export interface IStorage {
   // Users (supports both Replit Auth and username/password auth)
@@ -733,6 +734,57 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
+  }
+
+  // New authentication methods for username/password auth
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+
+  async createUser(userData: { username: string; email: string; password: string; firstName?: string; lastName?: string; role?: string }): Promise<User> {
+    const id = uuidv4();
+    const newUser: User = {
+      id,
+      username: userData.username,
+      email: userData.email,
+      passwordHash: userData.password, // Will be hashed by auth layer
+      firstName: userData.firstName || null,
+      lastName: userData.lastName || null,
+      profileImageUrl: null,
+      role: userData.role || 'user',
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    
+    const [user] = await db
+      .insert(users)
+      .values(newUser)
+      .returning();
+    return user;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users);
+  }
+
+  async updateUserRole(id: string, role: string): Promise<User | undefined> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({ role, updatedAt: new Date() })
+      .where(eq(users.id, id))
+      .returning();
+    return updatedUser || undefined;
+  }
+
+  async updateUserStatus(id: string, isActive: boolean): Promise<User | undefined> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({ isActive, updatedAt: new Date() })
+      .where(eq(users.id, id))
+      .returning();
+    return updatedUser || undefined;
   }
 
   async getAllRegions(): Promise<Region[]> {
