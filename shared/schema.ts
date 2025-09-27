@@ -131,8 +131,10 @@ export const cartItems = pgTable("cart_items", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// Insert schemas
-export const insertUserSchema = createInsertSchema(users).omit({ createdAt: true, updatedAt: true });
+// Insert schemas - includes password for registration
+export const insertUserSchema = createInsertSchema(users).omit({ createdAt: true, updatedAt: true, passwordHash: true }).extend({
+  password: z.string().min(6, "Password must be at least 6 characters")
+});
 export const upsertUserSchema = createInsertSchema(users).omit({ createdAt: true, updatedAt: true });
 export const insertRegionSchema = createInsertSchema(regions).omit({ id: true });
 export const insertTourSchema = createInsertSchema(tours).omit({ id: true });
