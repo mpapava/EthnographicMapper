@@ -42,6 +42,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin-only region update
+  app.put("/api/admin/regions/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updateData = req.body;
+      
+      const updatedRegion = await storage.updateRegion(id, updateData);
+      if (!updatedRegion) {
+        return res.status(404).json({ error: "Region not found" });
+      }
+      
+      res.json(updatedRegion);
+    } catch (error) {
+      console.error("Error updating region:", error);
+      res.status(500).json({ error: "Failed to update region" });
+    }
+  });
+
   // Tours
   app.get("/api/tours", async (req, res) => {
     try {

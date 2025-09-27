@@ -38,6 +38,18 @@ export const regions = pgTable("regions", {
   descriptionRu: text("description_ru"),
   imageUrl: text("image_url").notNull(),
   mainAttraction: text("main_attraction").notNull(),
+  location: text("location"), // Geographic location
+  locationKa: text("location_ka"),
+  locationRu: text("location_ru"),
+  bestTimeToVisit: text("best_time_to_visit"), // Best time to visit
+  bestTimeToVisitKa: text("best_time_to_visit_ka"),
+  bestTimeToVisitRu: text("best_time_to_visit_ru"),
+  climate: text("climate"), // Climate information
+  climateKa: text("climate_ka"),
+  climateRu: text("climate_ru"),
+  howToReach: text("how_to_reach"), // Transportation info
+  howToReachKa: text("how_to_reach_ka"),
+  howToReachRu: text("how_to_reach_ru"),
   slug: text("slug").notNull().unique(),
   featured: boolean("featured").default(false),
 });

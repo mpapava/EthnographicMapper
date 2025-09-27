@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Shield, Users, UserCheck, UserX, Crown, Map, Plane, Store, Edit, Trash2 } from "lucide-react";
+import RegionEditForm from "@/components/RegionEditForm";
 
 interface User {
   id: string;
@@ -87,6 +88,10 @@ export default function Admin() {
 
   // Error states
   const [error, setError] = useState("");
+
+  // Edit states
+  const [editingRegion, setEditingRegion] = useState<Region | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Redirect if not authenticated or not admin
   useEffect(() => {
@@ -267,6 +272,48 @@ export default function Admin() {
         variant: "destructive",
       });
     }
+  };
+
+  // Region editing functions
+  const handleEditRegion = (region: Region) => {
+    setEditingRegion(region);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveRegion = async (regionId: number, data: any) => {
+    try {
+      const response = await fetch(`/api/admin/regions/${regionId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update region");
+      }
+
+      const updatedRegion = await response.json();
+      setRegions(regions.map(r => r.id === regionId ? updatedRegion : r));
+      
+      toast({
+        title: "Success",
+        description: "Region updated successfully",
+      });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to update region";
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      throw err;
+    }
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditingRegion(null);
   };
 
   if (!isAuthenticated || !isAdmin) {
@@ -470,7 +517,12 @@ export default function Admin() {
                             </TableCell>
                             <TableCell>
                               <div className="flex space-x-2">
-                                <Button variant="ghost" size="sm">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => handleEditRegion(region)}
+                                  data-testid={`edit-region-${region.id}`}
+                                >
                                   <Edit className="h-4 w-4" />
                                 </Button>
                                 <Button variant="ghost" size="sm">
@@ -638,6 +690,14 @@ export default function Admin() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Region Edit Modal */}
+        <RegionEditForm
+          region={editingRegion}
+          isOpen={isEditModalOpen}
+          onClose={closeEditModal}
+          onSave={handleSaveRegion}
+        />
       </div>
     </div>
   );
