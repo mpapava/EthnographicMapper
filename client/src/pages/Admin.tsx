@@ -8,8 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Shield, Users, UserCheck, UserX, Crown } from "lucide-react";
+import { Shield, Users, UserCheck, UserX, Crown, Map, Plane, Store, Edit, Trash2 } from "lucide-react";
 
 interface User {
   id: string;
@@ -22,13 +23,70 @@ interface User {
   createdAt: string;
 }
 
+interface Region {
+  id: number;
+  name: string;
+  nameKa: string;
+  nameRu: string;
+  description: string;
+  descriptionKa: string;
+  descriptionRu: string;
+  slug: string;
+  featured: boolean;
+  imageUrl: string;
+}
+
+interface Tour {
+  id: number;
+  title: string;
+  titleKa: string;
+  titleRu: string;
+  description: string;
+  descriptionKa: string;
+  descriptionRu: string;
+  price: number;
+  duration: string;
+  regionId: number;
+  category: string;
+  featured: boolean;
+  imageUrl: string;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  nameKa: string;
+  nameRu: string;
+  description: string;
+  descriptionKa: string;
+  descriptionRu: string;
+  price: number;
+  category: string;
+  featured: boolean;
+  imageUrl: string;
+  inStock: boolean;
+}
+
 export default function Admin() {
   const { user, isAdmin, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [activeTab, setActiveTab] = useState("users");
   const { toast } = useToast();
+
+  // State for different data types
+  const [users, setUsers] = useState<User[]>([]);
+  const [regions, setRegions] = useState<Region[]>([]);
+  const [tours, setTours] = useState<Tour[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  // Loading states
+  const [usersLoading, setUsersLoading] = useState(true);
+  const [regionsLoading, setRegionsLoading] = useState(false);
+  const [toursLoading, setToursLoading] = useState(false);
+  const [productsLoading, setProductsLoading] = useState(false);
+
+  // Error states
+  const [error, setError] = useState("");
 
   // Redirect if not authenticated or not admin
   useEffect(() => {
@@ -66,7 +124,7 @@ export default function Admin() {
           variant: "destructive",
         });
       } finally {
-        setLoading(false);
+        setUsersLoading(false);
       }
     };
 
@@ -75,6 +133,82 @@ export default function Admin() {
     }
   }, [isAuthenticated, isAdmin, toast]);
 
+  // Fetch regions
+  const fetchRegions = async () => {
+    if (!regionsLoading) {
+      setRegionsLoading(true);
+      try {
+        const response = await fetch("/api/regions");
+        if (!response.ok) throw new Error("Failed to fetch regions");
+        const data = await response.json();
+        setRegions(data);
+      } catch (err) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch regions",
+          variant: "destructive",
+        });
+      } finally {
+        setRegionsLoading(false);
+      }
+    }
+  };
+
+  // Fetch tours
+  const fetchTours = async () => {
+    if (!toursLoading) {
+      setToursLoading(true);
+      try {
+        const response = await fetch("/api/tours");
+        if (!response.ok) throw new Error("Failed to fetch tours");
+        const data = await response.json();
+        setTours(data);
+      } catch (err) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch tours",
+          variant: "destructive",
+        });
+      } finally {
+        setToursLoading(false);
+      }
+    }
+  };
+
+  // Fetch products
+  const fetchProducts = async () => {
+    if (!productsLoading) {
+      setProductsLoading(true);
+      try {
+        const response = await fetch("/api/products");
+        if (!response.ok) throw new Error("Failed to fetch products");
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch products",
+          variant: "destructive",
+        });
+      } finally {
+        setProductsLoading(false);
+      }
+    }
+  };
+
+  // Handle tab change and fetch data when needed
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    if (value === "regions" && regions.length === 0) {
+      fetchRegions();
+    } else if (value === "tours" && tours.length === 0) {
+      fetchTours();
+    } else if (value === "products" && products.length === 0) {
+      fetchProducts();
+    }
+  };
+
+  // User management functions
   const updateUserRole = async (userId: string, role: string) => {
     try {
       const response = await fetch(`/api/admin/users/${userId}/role`, {
@@ -123,7 +257,7 @@ export default function Admin() {
       
       toast({
         title: "Success",
-        description: `User ${isActive ? "activated" : "deactivated"} successfully`,
+        description: `User ${isActive ? 'activated' : 'deactivated'}`,
       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to update status";
@@ -135,165 +269,375 @@ export default function Admin() {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
-
-  const getUserDisplayName = (user: User) => {
-    if (user.firstName && user.lastName) {
-      return `${user.firstName} ${user.lastName}`;
-    }
-    return user.username;
-  };
-
   if (!isAuthenticated || !isAdmin) {
     return null;
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-georgian-wine"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-georgian-wine rounded-lg">
-              <Shield className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Panel</h1>
-              <p className="text-gray-600 dark:text-gray-400">Manage users and system settings</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-            <Crown className="h-4 w-4" />
-            <span>Logged in as: {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.username}</span>
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+            <Shield className="mr-3 h-8 w-8 text-georgian-wine" />
+            Admin Panel
+          </h1>
+          <p className="mt-2 text-gray-600">Manage your Georgian Heritage website</p>
         </div>
 
         {error && (
-          <Alert variant="destructive" className="mb-6">
-            <AlertDescription>{error}</AlertDescription>
+          <Alert className="mb-6 border-red-200 bg-red-50">
+            <AlertDescription className="text-red-700">{error}</AlertDescription>
           </Alert>
         )}
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{users.length}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-              <UserCheck className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{users.filter(u => u.isActive).length}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Admins</CardTitle>
-              <Crown className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{users.filter(u => u.role === 'admin').length}</div>
-            </CardContent>
-          </Card>
-        </div>
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="users" className="flex items-center">
+              <Users className="mr-2 h-4 w-4" />
+              Users
+            </TabsTrigger>
+            <TabsTrigger value="regions" className="flex items-center">
+              <Map className="mr-2 h-4 w-4" />
+              Regions
+            </TabsTrigger>
+            <TabsTrigger value="tours" className="flex items-center">
+              <Plane className="mr-2 h-4 w-4" />
+              Tours
+            </TabsTrigger>
+            <TabsTrigger value="products" className="flex items-center">
+              <Store className="mr-2 h-4 w-4" />
+              Store
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Users Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle>User Management</CardTitle>
-            <CardDescription>
-              Manage user accounts, roles, and access permissions
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {users.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{getUserDisplayName(user)}</div>
-                        <div className="text-sm text-gray-500">@{user.username}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>
-                      <Select
-                        value={user.role}
-                        onValueChange={(role) => updateUserRole(user.id, role)}
-                        data-testid={`select-role-${user.id}`}
-                      >
-                        <SelectTrigger className="w-24">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="user">User</SelectItem>
-                          <SelectItem value="admin">Admin</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={user.isActive}
-                          onCheckedChange={(checked) => updateUserStatus(user.id, checked)}
-                          data-testid={`switch-status-${user.id}`}
-                        />
-                        <Badge variant={user.isActive ? "default" : "secondary"}>
-                          {user.isActive ? "Active" : "Inactive"}
-                        </Badge>
-                      </div>
-                    </TableCell>
-                    <TableCell>{formatDate(user.createdAt)}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        {user.isActive ? (
-                          <UserCheck className="h-4 w-4 text-green-600" />
-                        ) : (
-                          <UserX className="h-4 w-4 text-red-600" />
-                        )}
-                        {user.role === "admin" && (
-                          <Crown className="h-4 w-4 text-yellow-600" />
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+          {/* Users Tab */}
+          <TabsContent value="users">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Users className="mr-2 h-5 w-5" />
+                  User Management
+                </CardTitle>
+                <CardDescription>
+                  Manage user accounts, roles, and permissions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {usersLoading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="text-gray-500">Loading users...</div>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>User</TableHead>
+                          <TableHead>Username</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Role</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Joined</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {users.map((userData) => (
+                          <TableRow key={userData.id}>
+                            <TableCell>
+                              <div className="flex items-center space-x-3">
+                                <div className="h-8 w-8 bg-georgian-wine rounded-full flex items-center justify-center">
+                                  <span className="text-white text-sm font-medium">
+                                    {userData.firstName?.charAt(0) || userData.username.charAt(0).toUpperCase()}
+                                  </span>
+                                </div>
+                                <div>
+                                  <div className="font-medium">
+                                    {userData.firstName || userData.lastName
+                                      ? `${userData.firstName || ''} ${userData.lastName || ''}`.trim()
+                                      : userData.username}
+                                  </div>
+                                  {userData.role === 'admin' && (
+                                    <Crown className="inline h-3 w-3 text-yellow-500" />
+                                  )}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="font-mono text-sm">{userData.username}</TableCell>
+                            <TableCell>{userData.email}</TableCell>
+                            <TableCell>
+                              <Select
+                                value={userData.role}
+                                onValueChange={(role) => updateUserRole(userData.id, role)}
+                              >
+                                <SelectTrigger className="w-24">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="user">User</SelectItem>
+                                  <SelectItem value="admin">Admin</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center space-x-2">
+                                <Switch
+                                  checked={userData.isActive}
+                                  onCheckedChange={(checked) => updateUserStatus(userData.id, checked)}
+                                />
+                                <Badge variant={userData.isActive ? "default" : "secondary"}>
+                                  {userData.isActive ? (
+                                    <>
+                                      <UserCheck className="mr-1 h-3 w-3" />
+                                      Active
+                                    </>
+                                  ) : (
+                                    <>
+                                      <UserX className="mr-1 h-3 w-3" />
+                                      Inactive
+                                    </>
+                                  )}
+                                </Badge>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-sm text-gray-500">
+                              {new Date(userData.createdAt).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>
+                              <Button variant="ghost" size="sm">
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Regions Tab */}
+          <TabsContent value="regions">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Map className="mr-2 h-5 w-5" />
+                  Regions Management
+                </CardTitle>
+                <CardDescription>
+                  Manage Georgian ethnographic regions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {regionsLoading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="text-gray-500">Loading regions...</div>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Image</TableHead>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Georgian Name</TableHead>
+                          <TableHead>Russian Name</TableHead>
+                          <TableHead>Slug</TableHead>
+                          <TableHead>Featured</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {regions.map((region) => (
+                          <TableRow key={region.id}>
+                            <TableCell>
+                              <img 
+                                src={region.imageUrl} 
+                                alt={region.name}
+                                className="h-12 w-12 object-cover rounded"
+                              />
+                            </TableCell>
+                            <TableCell className="font-medium">{region.name}</TableCell>
+                            <TableCell>{region.nameKa}</TableCell>
+                            <TableCell>{region.nameRu}</TableCell>
+                            <TableCell className="font-mono text-sm">{region.slug}</TableCell>
+                            <TableCell>
+                              <Badge variant={region.featured ? "default" : "secondary"}>
+                                {region.featured ? "Featured" : "Standard"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex space-x-2">
+                                <Button variant="ghost" size="sm">
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Tours Tab */}
+          <TabsContent value="tours">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Plane className="mr-2 h-5 w-5" />
+                  Tours Management
+                </CardTitle>
+                <CardDescription>
+                  Manage tour packages and experiences
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {toursLoading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="text-gray-500">Loading tours...</div>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Image</TableHead>
+                          <TableHead>Title</TableHead>
+                          <TableHead>Category</TableHead>
+                          <TableHead>Duration</TableHead>
+                          <TableHead>Price</TableHead>
+                          <TableHead>Region</TableHead>
+                          <TableHead>Featured</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {tours.map((tour) => (
+                          <TableRow key={tour.id}>
+                            <TableCell>
+                              <img 
+                                src={tour.imageUrl} 
+                                alt={tour.title}
+                                className="h-12 w-12 object-cover rounded"
+                              />
+                            </TableCell>
+                            <TableCell className="font-medium">{tour.title}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{tour.category}</Badge>
+                            </TableCell>
+                            <TableCell>{tour.duration}</TableCell>
+                            <TableCell className="font-medium">${tour.price}</TableCell>
+                            <TableCell>{regions.find(r => r.id === tour.regionId)?.name || 'Unknown'}</TableCell>
+                            <TableCell>
+                              <Badge variant={tour.featured ? "default" : "secondary"}>
+                                {tour.featured ? "Featured" : "Standard"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex space-x-2">
+                                <Button variant="ghost" size="sm">
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Products Tab */}
+          <TabsContent value="products">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Store className="mr-2 h-5 w-5" />
+                  Store Management
+                </CardTitle>
+                <CardDescription>
+                  Manage products and inventory
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {productsLoading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="text-gray-500">Loading products...</div>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Image</TableHead>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Category</TableHead>
+                          <TableHead>Price</TableHead>
+                          <TableHead>Stock</TableHead>
+                          <TableHead>Featured</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {products.map((product) => (
+                          <TableRow key={product.id}>
+                            <TableCell>
+                              <img 
+                                src={product.imageUrl} 
+                                alt={product.name}
+                                className="h-12 w-12 object-cover rounded"
+                              />
+                            </TableCell>
+                            <TableCell className="font-medium">{product.name}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{product.category}</Badge>
+                            </TableCell>
+                            <TableCell className="font-medium">${product.price}</TableCell>
+                            <TableCell>
+                              <Badge variant={product.inStock ? "default" : "destructive"}>
+                                {product.inStock ? "In Stock" : "Out of Stock"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={product.featured ? "default" : "secondary"}>
+                                {product.featured ? "Featured" : "Standard"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex space-x-2">
+                                <Button variant="ghost" size="sm">
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
