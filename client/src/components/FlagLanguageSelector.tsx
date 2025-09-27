@@ -1,21 +1,28 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Language } from '@/lib/i18n';
+import usFlag from '@assets/united-states_1759006812751.png';
+import georgiaFlag from '@assets/georgia_1759006812752.png';
+import russiaFlag from '@assets/russia_1759006812752.png';
 
 interface FlagLanguageSelectorProps {
   className?: string;
   triggerClassName?: string;
 }
 
+const flagImages = {
+  en: usFlag,
+  ka: georgiaFlag,
+  ru: russiaFlag
+};
+
 const FlagIcon = ({ country }: { country: string }) => {
-  const flagStyles = {
-    en: 'bg-gradient-to-r from-blue-600 via-white to-red-600',
-    ka: 'bg-gradient-to-r from-white via-red-600 to-white', 
-    ru: 'bg-gradient-to-b from-white via-blue-600 to-red-600'
-  };
-  
   return (
-    <div className={`w-6 h-4 rounded-sm border border-gray-300 ${flagStyles[country as keyof typeof flagStyles]}`} />
+    <img 
+      src={flagImages[country as keyof typeof flagImages]} 
+      alt={`${country} flag`}
+      className="w-6 h-4 rounded-sm object-cover"
+    />
   );
 };
 
