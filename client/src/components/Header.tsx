@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Menu, X, ShoppingCart, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import logoImage from '@assets/logo_1759066508494.jpeg';
 import FlagLanguageSelector from '@/components/FlagLanguageSelector';
 import {
   DropdownMenu,
@@ -50,9 +51,12 @@ export default function Header() {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Link href="/">
-                <h1 className="text-2xl font-serif font-bold georgian-wine cursor-pointer">
-                  Georgian Heritage
-                </h1>
+                <img 
+                  src={logoImage} 
+                  alt="Georgian Heritage" 
+                  className="h-12 w-auto cursor-pointer"
+                  data-testid="header-logo"
+                />
               </Link>
             </div>
           </div>
