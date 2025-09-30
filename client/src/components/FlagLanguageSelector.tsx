@@ -42,9 +42,9 @@ export default function FlagLanguageSelector({ className, triggerClassName }: Fl
         <SelectItem value="ka" data-testid="language-option-ka">
           <FlagIcon country="ka" />
         </SelectItem>
-        <SelectItem value="ru" data-testid="language-option-ru">
+       {/* <SelectItem value="ru" data-testid="language-option-ru">
           <FlagIcon country="ru" />
-        </SelectItem>
+        </SelectItem> */}
       </SelectContent>
     </Select>
   );

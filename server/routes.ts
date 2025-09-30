@@ -12,10 +12,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const regions = await storage.getAllRegions();
       res.json(regions);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch regions" });
+    } catch (error: any) {
+      console.error("Error fetching regions:", error);      // ლოგი კონსოლში
+      res.status(500).json({
+        error: "Failed to fetch regions",
+        details: error.message || error.toString(),         // ტექსტი json-ში
+      });
     }
   });
+  
 
   app.get("/api/regions/:id", async (req, res) => {
     try {

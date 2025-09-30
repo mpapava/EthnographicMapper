@@ -22,8 +22,32 @@ export default function Header() {
   const { language, setLanguage } = useLanguage();
   const { user, isAuthenticated, isLoading, logout, isAdmin } = useAuth();
 
+  interface ProductDetails {
+    id: number;
+    name: string;
+    nameKa: string;
+    nameRu: string;
+    description: string;
+    descriptionKa: string;
+    descriptionRu: string;
+    price: string; 
+    category: string;
+    imageUrl: string;
+    inStock: boolean;
+    featured: boolean;
+  }
+
+  interface CartItem {
+    id: number;
+    sessionId: string;
+    productId: number;
+    quantity: number;
+    createdAt: string; 
+    product: ProductDetails; 
+  }
+
   // Cart items count
-  const { data: cartItems = [] } = useQuery({
+  const { data: cartItems = [] } = useQuery<CartItem[]>({
     queryKey: ['/api/cart'],
     refetchInterval: 5000, // Refresh cart every 5 seconds
   });

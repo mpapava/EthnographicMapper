@@ -38,7 +38,7 @@ async function seedDatabase() {
         featured: true
       },
       {
-        name: "Samegrelo",
+        name: "Samegrelo1",
         nameKa: "სამეგრელო",
         nameRu: "Самегрело",
         slug: "samegrelo",

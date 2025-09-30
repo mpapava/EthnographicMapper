@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Georgian Ethnographic Regions - Discover Georgia's Cultural Heritage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'georgian-wine': '#8B1538',
+                        'georgian-gold': '#D4A574',
+                        'georgian-terracotta': '#C17A5B',
+                        'georgian-cream': '#FAF8F5',
+                        'georgian-gray': '#6B7280'
+                    },
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-georgian-cream font-sans">
+    <!-- @COMPONENT: Header [navigation, language selector, mobile menu] -->
+    <header class="bg-white shadow-lg sticky top-0 z-50" data-mock="true">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-serif font-bold text-georgian-wine">Georgian Heritage</h1>
+                    </div>
+                </div>
+                
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="text-georgian-wine hover:text-georgian-terracotta font-medium transition-colors" data-bind="navigation.home">Home</a>
+                        <a href="#regions" class="text-georgian-gray hover:text-georgian-wine font-medium transition-colors" data-bind="navigation.regions">Regions</a>
+                        <a href="#tours" class="text-georgian-gray hover:text-georgian-wine font-medium transition-colors" data-bind="navigation.tours">Tours</a>
+                        <a href="#store" class="text-georgian-gray hover:text-georgian-wine font-medium transition-colors" data-bind="navigation.store">Store</a>
+                        <a href="#blog" class="text-georgian-gray hover:text-georgian-wine font-medium transition-colors" data-bind="navigation.blog">Blog</a>
+                        <a href="#contact" class="text-georgian-gray hover:text-georgian-wine font-medium transition-colors" data-bind="navigation.contact">Contact</a>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <!-- Language Selector -->
+                    <div class="relative">
+                        <select class="bg-transparent text-georgian-gray border-none font-medium cursor-pointer" data-implementation="Implement language switching functionality">
+                            <option value="en">EN</option>
+                            <option value="ka">ქართული</option>
+                            <option value="ru">РУ</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Shopping Cart -->
+                    <div class="relative">
+                        <button class="text-georgian-gray hover:text-georgian-wine transition-colors" data-event="click:toggleCart">
+                            <i class="fas fa-shopping-cart text-lg"></i>
+                            <span class="absolute -top-2 -right-2 bg-georgian-wine text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" data-bind="cart.itemCount">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Mobile menu button -->
+                    <div class="md:hidden">
+                        <button class="text-georgian-gray hover:text-georgian-wine" data-event="click:toggleMobileMenu">
+                            <i class="fas fa-bars text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <!-- @COMPONENT: HeroSection [main banner, call-to-action] -->
+    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Georgian mountain landscape with traditional architecture -->
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080');"></div>
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        
+        <div class="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
+            <h1 class="text-5xl md:text-7xl font-serif font-bold mb-6" data-bind="hero.title">
+                Discover Georgia's <br><span class="text-georgian-gold">Ethnographic Heritage</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 font-light" data-bind="hero.subtitle">
+                Explore ancient regions, taste traditional cuisine, and experience the rich cultural tapestry of Georgia
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-georgian-wine hover:bg-opacity-90 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all" data-event="click:startExploring">
+                    Start Exploring
+                </button>
+                <button class="border-2 border-white text-white hover:bg-white hover:text-georgian-wine px-8 py-4 rounded-lg text-lg font-semibold transition-all" data-event="click:watchVideo">
+                    <i class="fas fa-play mr-2"></i>Watch Virtual Tour
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HeroSection -->
+
+    <!-- @COMPONENT: RegionalOverview [region cards, highlights] -->
+    <section id="regions" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-georgian-wine mb-4" data-bind="regions.title">
+                    Ethnographic Regions of Georgia
+                </h2>
+                <p class="text-xl text-georgian-gray max-w-3xl mx-auto" data-bind="regions.description">
+                    From the wine valleys of Kakheti to the mountain peaks of Svaneti, each region tells its own unique story through centuries of tradition, culture, and heritage.
+                </p>
+            </div>
+
+            <!-- @MAP: regions.map(region => ( -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Kakheti Region Card -->
+                <div class="group cursor-pointer" data-event="click:viewRegion" data-region-id="kakheti">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform group-hover:scale-105">
+                        <!-- Vineyard landscape with traditional Georgian wine cellar -->
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" alt="Kakheti vineyard landscape" class="w-full h-48 object-cover" data-mock-image="true">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-2" data-bind="region.name">Kakheti</h3>
+                            <p class="text-georgian-gray mb-4" data-bind="region.description">The wine region of Georgia, home to ancient winemaking traditions and spectacular vineyard landscapes.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-georgian-terracotta font-semibold" data-bind="region.attraction">Wine Tasting Tours</span>
+                                <i class="fas fa-arrow-right text-georgian-wine group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Svaneti Region Card -->
+                <div class="group cursor-pointer" data-event="click:viewRegion" data-region-id="svaneti">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform group-hover:scale-105">
+                        <!-- Mountain landscape with traditional Svan towers -->
+                        <img src="https://pixabay.com/get/g346b7b7ab685519ea4030dc4396d64f6b8e2c640a39cfd2a124069f3b06120fa13d1ff947c96264ab1d9495a5a49e5f09db2bb267a285923445cbe4e9ca6536c_1280.jpg" alt="Svaneti mountain towers" class="w-full h-48 object-cover" data-mock-image="true">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-2" data-bind="region.name">Svaneti</h3>
+                            <p class="text-georgian-gray mb-4" data-bind="region.description">Ancient mountain region famous for its medieval defensive towers and pristine alpine landscapes.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-georgian-terracotta font-semibold" data-bind="region.attraction">Mountain Hiking</span>
+                                <i class="fas fa-arrow-right text-georgian-wine group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Samegrelo Region Card -->
+                <div class="group cursor-pointer" data-event="click:viewRegion" data-region-id="samegrelo">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform group-hover:scale-105">
+                        <!-- Coastal landscape with traditional Megrelian architecture -->
+                        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" alt="Samegrelo coastal region" class="w-full h-48 object-cover" data-mock-image="true">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-2" data-bind="region.name">Samegrelo</h3>
+                            <p class="text-georgian-gray mb-4" data-bind="region.description">Coastal region known for its unique Megrelian cuisine and subtropical climate.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-georgian-terracotta font-semibold" data-bind="region.attraction">Culinary Tours</span>
+                                <i class="fas fa-arrow-right text-georgian-wine group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Imereti Region Card -->
+                <div class="group cursor-pointer" data-event="click:viewRegion" data-region-id="imereti">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform group-hover:scale-105">
+                        <!-- Historical cave monastery landscape -->
+                        <img src="https://pixabay.com/get/gd35f027c66d20240d4bd7644af5b6a7ca6865713ea30f677bf1ffec2a800476c281cea1bf9dfd2b174f74b2947bf8b86a6bab7d2072436a17ef2783aa2b8cb26_1280.jpg" alt="Imereti cave monasteries" class="w-full h-48 object-cover" data-mock-image="true">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-2" data-bind="region.name">Imereti</h3>
+                            <p class="text-georgian-gray mb-4" data-bind="region.description">Historical heartland featuring ancient cave cities and traditional Georgian architecture.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-georgian-terracotta font-semibold" data-bind="region.attraction">Historical Sites</span>
+                                <i class="fas fa-arrow-right text-georgian-wine group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Racha Region Card -->
+                <div class="group cursor-pointer" data-event="click:viewRegion" data-region-id="racha">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform group-hover:scale-105">
+                        <!-- Mountain valley with traditional wooden architecture -->
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" alt="Racha mountain valleys" class="w-full h-48 object-cover" data-mock-image="true">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-2" data-bind="region.name">Racha</h3>
+                            <p class="text-georgian-gray mb-4" data-bind="region.description">Highland region renowned for its pristine nature and traditional mountain hospitality.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-georgian-terracotta font-semibold" data-bind="region.attraction">Nature Tours</span>
+                                <i class="fas fa-arrow-right text-georgian-wine group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Javakheti Region Card -->
+                <div class="group cursor-pointer" data-event="click:viewRegion" data-region-id="javakheti">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform group-hover:scale-105">
+                        <!-- High plateau landscape with volcanic lakes -->
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" alt="Javakheti plateau" class="w-full h-48 object-cover" data-mock-image="true">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-2" data-bind="region.name">Javakheti</h3>
+                            <p class="text-georgian-gray mb-4" data-bind="region.description">High plateau region with unique volcanic landscapes and nomadic heritage.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-georgian-terracotta font-semibold" data-bind="region.attraction">Adventure Tours</span>
+                                <i class="fas fa-arrow-right text-georgian-wine group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- @END_MAP )) -->
+        </div>
+    </section>
+    <!-- @END_COMPONENT: RegionalOverview -->
+
+    <!-- @COMPONENT: PhotoGallery [featured images, virtual tour teaser] -->
+    <section class="py-20 bg-georgian-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-georgian-wine mb-4" data-bind="gallery.title">
+                    Visual Journey Through Georgia
+                </h2>
+                <p class="text-xl text-georgian-gray max-w-3xl mx-auto" data-bind="gallery.description">
+                    Experience the breathtaking beauty and rich cultural heritage through our curated gallery of Georgian landscapes, architecture, and traditions.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+                <!-- Traditional Georgian feast with supra table -->
+                <div class="group relative overflow-hidden rounded-lg cursor-pointer" data-event="click:openGallery" data-image-id="1">
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=800" alt="Traditional Georgian supra feast" class="w-full h-64 object-cover transition-transform group-hover:scale-110" data-mock-image="true">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity"></div>
+                </div>
+
+                <!-- Ancient Georgian church architecture -->
+                <div class="group relative overflow-hidden rounded-lg cursor-pointer" data-event="click:openGallery" data-image-id="2">
+                    <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=800" alt="Ancient Georgian church" class="w-full h-64 object-cover transition-transform group-hover:scale-110" data-mock-image="true">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity"></div>
+                </div>
+
+                <!-- Traditional Georgian wine cellar with clay vessels -->
+                <div class="group relative overflow-hidden rounded-lg cursor-pointer" data-event="click:openGallery" data-image-id="3">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=800" alt="Georgian wine cellar with qvevri" class="w-full h-64 object-cover transition-transform group-hover:scale-110" data-mock-image="true">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity"></div>
+                </div>
+
+                <!-- Georgian mountain landscape with traditional architecture -->
+                <div class="group relative overflow-hidden rounded-lg cursor-pointer" data-event="click:openGallery" data-image-id="4">
+                    <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=800" alt="Georgian mountain village" class="w-full h-64 object-cover transition-transform group-hover:scale-110" data-mock-image="true">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="bg-georgian-wine hover:bg-opacity-90 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all mr-4" data-event="click:viewFullGallery">
+                    View Full Gallery
+                </button>
+                <button class="border-2 border-georgian-wine text-georgian-wine hover:bg-georgian-wine hover:text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all" data-event="click:start360Tour">
+                    <i class="fas fa-vr-cardboard mr-2"></i>360° Virtual Tour
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: PhotoGallery -->
+
+    <!-- @COMPONENT: TourPackages [tour listings, booking interface] -->
+    <section id="tours" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-georgian-wine mb-4" data-bind="tours.title">
+                    Authentic Georgian Experiences
+                </h2>
+                <p class="text-xl text-georgian-gray max-w-3xl mx-auto" data-bind="tours.description">
+                    Join us for carefully crafted tours that immerse you in Georgia's rich cultural heritage, from wine tasting to traditional cooking classes.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Wine Heritage Tour -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                    <!-- Georgian vineyard with traditional wine-making -->
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" alt="Georgian vineyard tour" class="w-full h-48 object-cover" data-mock-image="true">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-georgian-gold bg-opacity-20 text-georgian-wine px-3 py-1 rounded-full text-sm font-semibold" data-bind="tour.category">Wine Experience</span>
+                            <span class="text-2xl font-bold text-georgian-wine" data-bind="tour.price">$89</span>
+                        </div>
+                        <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-3" data-bind="tour.title">Kakheti Wine Heritage Tour</h3>
+                        <p class="text-georgian-gray mb-4" data-bind="tour.description">Experience traditional Georgian winemaking in ancient qvevri clay vessels. Includes tastings, cellar visits, and participation in wine pressing.</p>
+                        
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-sm text-georgian-gray">
+                                <i class="fas fa-clock mr-2 text-georgian-terracotta"></i>
+                                <span data-bind="tour.duration">Full Day (8 hours)</span>
+                            </div>
+                            <div class="flex items-center text-sm text-georgian-gray">
+                                <i class="fas fa-users mr-2 text-georgian-terracotta"></i>
+                                <span data-bind="tour.groupSize">Max 12 people</span>
+                            </div>
+                            <div class="flex items-center text-sm text-georgian-gray">
+                                <i class="fas fa-utensils mr-2 text-georgian-terracotta"></i>
+                                <span data-bind="tour.includes">Traditional lunch included</span>
+                            </div>
+                        </div>
+
+                        <button class="w-full bg-georgian-wine hover:bg-opacity-90 text-white py-3 rounded-lg font-semibold transition-all" data-event="click:bookTour" data-tour-id="wine-heritage">
+                            Book Experience
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Culinary Traditions Tour -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                    <!-- Traditional Georgian cooking class -->
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" alt="Georgian cooking class" class="w-full h-48 object-cover" data-mock-image="true">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-georgian-terracotta bg-opacity-20 text-georgian-wine px-3 py-1 rounded-full text-sm font-semibold" data-bind="tour.category">Culinary</span>
+                            <span class="text-2xl font-bold text-georgian-wine" data-bind="tour.price">$65</span>
+                        </div>
+                        <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-3" data-bind="tour.title">Authentic Cooking Experience</h3>
+                        <p class="text-georgian-gray mb-4" data-bind="tour.description">Learn to prepare traditional Georgian dishes like khachapuri and khinkali with local families. Take home recipes and techniques.</p>
+                        
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-sm text-georgian-gray">
+                                <i class="fas fa-clock mr-2 text-georgian-terracotta"></i>
+                                <span data-bind="tour.duration">Half Day (4 hours)</span>
+                            </div>
+                            <div class="flex items-center text-sm text-georgian-gray">
+                                <i class="fas fa-users mr-2 text-georgian-terracotta"></i>
+                                <span data-bind="tour.groupSize">Max 8 people</span>
+                            </div>
+                            <div class="flex items-center text-sm text-georgian-gray">
+                                <i class="fas fa-book mr-2 text-georgian-terracotta"></i>
+                                <span data-bind="tour.includes">Recipe book included</span>
+                            </div>
+                        </div>
+
+                        <button class="w-full bg-georgian-wine hover:bg-opacity-90 text-white py-3 rounded-lg font-semibold transition-all" data-event="click:bookTour" data-tour-id="cooking-class">
+                            Book Experience
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mountain Heritage Trek -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                    <!-- Georgian mountain village with ancient towers -->
+                    <img src="https://pixabay.com/get/g557f845fe2dd020d6a0a2d9c88633869487f9d1165ce31839f0bf5c33776c480667ea1263998dba2646928b6e6279a7406ec8e35ceeca6d98947c245805d1f54_1280.jpg" alt="Svaneti mountain village" class="w-full h-48 object-cover" data-mock-image="true">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-green-100 text-georgian-wine px-3 py-1 rounded-full text-sm font-semibold" data-bind="tour.category">Adventure</span>
+                            <span class="text-2xl font-bold text-georgian-wine" data-bind="tour.price">$120</span>
+                        </div>
+                        <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-3" data-bind="tour.title">Svaneti Heritage Trek</h3>
+                        <p class="text-georgian-gray mb-4" data-bind="tour.description">Explore ancient defensive towers and pristine mountain landscapes. Experience traditional Svan hospitality and mountain culture.</p>
+                        
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-sm text-georgian-gray">
+                                <i class="fas fa-clock mr-2 text-georgian-terracotta"></i>
+                                <span data-bind="tour.duration">2 Days / 1 Night</span>
+                            </div>
+                            <div class="flex items-center text-sm text-georgian-gray">
+                                <i class="fas fa-users mr-2 text-georgian-terracotta"></i>
+                                <span data-bind="tour.groupSize">Max 10 people</span>
+                            </div>
+                            <div class="flex items-center text-sm text-georgian-gray">
+                                <i class="fas fa-bed mr-2 text-georgian-terracotta"></i>
+                                <span data-bind="tour.includes">Guesthouse accommodation</span>
+                            </div>
+                        </div>
+
+                        <button class="w-full bg-georgian-wine hover:bg-opacity-90 text-white py-3 rounded-lg font-semibold transition-all" data-event="click:bookTour" data-tour-id="mountain-trek">
+                            Book Experience
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <p class="text-georgian-gray mb-4">Looking for a custom experience?</p>
+                <button class="border-2 border-georgian-wine text-georgian-wine hover:bg-georgian-wine hover:text-white px-8 py-3 rounded-lg font-semibold transition-all" data-event="click:customTour">
+                    Plan Custom Tour
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: TourPackages -->
+
+    <!-- @COMPONENT: OnlineStore [product categories, featured items] -->
+    <section id="store" class="py-20 bg-georgian-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-georgian-wine mb-4" data-bind="store.title">
+                    Authentic Georgian Products
+                </h2>
+                <p class="text-xl text-georgian-gray max-w-3xl mx-auto" data-bind="store.description">
+                    Take home the taste and craftsmanship of Georgia with our curated selection of wines, artisanal crafts, and traditional delicacies.
+                </p>
+            </div>
+
+            <!-- Product Categories -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="bg-georgian-wine text-white px-6 py-2 rounded-full font-semibold" data-event="click:filterCategory" data-category="all">All Products</button>
+                <button class="bg-white text-georgian-gray px-6 py-2 rounded-full font-semibold hover:bg-georgian-wine hover:text-white transition-all" data-event="click:filterCategory" data-category="wine">Wine & Spirits</button>
+                <button class="bg-white text-georgian-gray px-6 py-2 rounded-full font-semibold hover:bg-georgian-wine hover:text-white transition-all" data-event="click:filterCategory" data-category="food">Traditional Food</button>
+                <button class="bg-white text-georgian-gray px-6 py-2 rounded-full font-semibold hover:bg-georgian-wine hover:text-white transition-all" data-event="click:filterCategory" data-category="crafts">Handicrafts</button>
+                <button class="bg-white text-georgian-gray px-6 py-2 rounded-full font-semibold hover:bg-georgian-wine hover:text-white transition-all" data-event="click:filterCategory" data-category="souvenirs">Souvenirs</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Georgian Wine Collection -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                    <!-- Traditional Georgian wine bottles in cellar -->
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=400" alt="Georgian wine collection" class="w-full h-48 object-cover group-hover:scale-105 transition-transform" data-mock-image="true">
+                    <div class="p-4">
+                        <h3 class="text-lg font-serif font-bold text-georgian-wine mb-2" data-bind="product.name">Kakheti Saperavi 2020</h3>
+                        <p class="text-sm text-georgian-gray mb-3" data-bind="product.description">Premium red wine from traditional qvevri fermentation</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-georgian-wine" data-bind="product.price">$24.99</span>
+                            <button class="bg-georgian-wine hover:bg-opacity-90 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all" data-event="click:addToCart" data-product-id="wine-saperavi">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Traditional Ceramics -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                    <!-- Georgian ceramic pottery and vessels -->
+                    <img src="https://pixabay.com/get/g91afe9039e81e33a0e716be0a14794038342bdfc0060c916bf0b574f8a9d67e582891d95529e45c5b08f4c6198f2c122_1280.jpg" alt="Georgian ceramic pottery" class="w-full h-48 object-cover group-hover:scale-105 transition-transform" data-mock-image="true">
+                    <div class="p-4">
+                        <h3 class="text-lg font-serif font-bold text-georgian-wine mb-2" data-bind="product.name">Handmade Ceramic Set</h3>
+                        <p class="text-sm text-georgian-gray mb-3" data-bind="product.description">Traditional Georgian pottery, handcrafted by local artisans</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-georgian-wine" data-bind="product.price">$45.00</span>
+                            <button class="bg-georgian-wine hover:bg-opacity-90 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all" data-event="click:addToCart" data-product-id="ceramic-set">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Georgian Honey & Preserves -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                    <!-- Georgian honey and traditional preserves -->
+                    <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=400" alt="Georgian honey and preserves" class="w-full h-48 object-cover group-hover:scale-105 transition-transform" data-mock-image="true">
+                    <div class="p-4">
+                        <h3 class="text-lg font-serif font-bold text-georgian-wine mb-2" data-bind="product.name">Mountain Honey Collection</h3>
+                        <p class="text-sm text-georgian-gray mb-3" data-bind="product.description">Pure wildflower honey from Georgian highlands</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-georgian-wine" data-bind="product.price">$18.50</span>
+                            <button class="bg-georgian-wine hover:bg-opacity-90 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all" data-event="click:addToCart" data-product-id="honey-collection">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Traditional Textiles -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                    <!-- Georgian traditional textile patterns -->
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=400" alt="Georgian traditional textiles" class="w-full h-48 object-cover group-hover:scale-105 transition-transform" data-mock-image="true">
+                    <div class="p-4">
+                        <h3 class="text-lg font-serif font-bold text-georgian-wine mb-2" data-bind="product.name">Wool Carpet Runner</h3>
+                        <p class="text-sm text-georgian-gray mb-3" data-bind="product.description">Hand-woven carpet with traditional Georgian patterns</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-georgian-wine" data-bind="product.price">$89.00</span>
+                            <button class="bg-georgian-wine hover:bg-opacity-90 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all" data-event="click:addToCart" data-product-id="wool-carpet">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <button class="bg-georgian-wine hover:bg-opacity-90 text-white px-8 py-3 rounded-lg font-semibold transition-all" data-event="click:viewAllProducts">
+                    View All Products
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: OnlineStore -->
+
+    <!-- @COMPONENT: BlogSection [featured articles, cultural stories] -->
+    <section id="blog" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-georgian-wine mb-4" data-bind="blog.title">
+                    Stories & Traditions
+                </h2>
+                <p class="text-xl text-georgian-gray max-w-3xl mx-auto" data-bind="blog.description">
+                    Dive deep into the rich tapestry of Georgian culture through stories, traditions, and insights from local experts and community members.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Featured Blog Post 1 -->
+                <article class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <!-- Georgian supra traditional feast -->
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400" alt="Georgian supra feast tradition" class="w-full h-48 object-cover" data-mock-image="true">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-georgian-gold bg-opacity-20 text-georgian-wine px-3 py-1 rounded-full text-sm font-semibold" data-bind="article.category">Traditions</span>
+                            <span class="text-sm text-georgian-gray ml-3" data-bind="article.date">March 15, 2024</span>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-georgian-wine mb-3" data-bind="article.title">The Sacred Art of Georgian Supra</h3>
+                        <p class="text-georgian-gray mb-4" data-bind="article.excerpt">Discover the profound cultural significance of the Georgian feast tradition, where every toast carries meaning and community bonds are strengthened...</p>
+                        <a href="#" class="text-georgian-wine hover:text-georgian-terracotta font-semibold transition-colors" data-event="click:readArticle" data-article-id="georgian-supra">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Featured Blog Post 2 -->
+                <article class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <!-- Ancient Georgian winemaking process -->
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400" alt="Georgian winemaking heritage" class="w-full h-48 object-cover" data-mock-image="true">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-georgian-terracotta bg-opacity-20 text-georgian-wine px-3 py-1 rounded-full text-sm font-semibold" data-bind="article.category">Heritage</span>
+                            <span class="text-sm text-georgian-gray ml-3" data-bind="article.date">March 10, 2024</span>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-georgian-wine mb-3" data-bind="article.title">8000 Years of Winemaking Legacy</h3>
+                        <p class="text-georgian-gray mb-4" data-bind="article.excerpt">Journey through Georgia's ancient winemaking heritage, from the first qvevri vessels to UNESCO recognition of traditional methods...</p>
+                        <a href="#" class="text-georgian-wine hover:text-georgian-terracotta font-semibold transition-colors" data-event="click:readArticle" data-article-id="winemaking-legacy">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Featured Blog Post 3 -->
+                <article class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <!-- Georgian mountain architecture -->
+                    <img src="https://pixabay.com/get/g7078e8099237048b8b5ec84f44a6872444c8bfbb9d2265a963a6143916091211a95ef5f77eb687c671a1f12632c45596214d5065f3af9b0ce7bfda81617b0cf7_1280.jpg" alt="Georgian mountain architecture" class="w-full h-48 object-cover" data-mock-image="true">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-green-100 text-georgian-wine px-3 py-1 rounded-full text-sm font-semibold" data-bind="article.category">Architecture</span>
+                            <span class="text-sm text-georgian-gray ml-3" data-bind="article.date">March 5, 2024</span>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-georgian-wine mb-3" data-bind="article.title">Guardians of the Mountains: Svan Towers</h3>
+                        <p class="text-georgian-gray mb-4" data-bind="article.excerpt">Explore the defensive architecture of Upper Svaneti, where medieval stone towers stand as testaments to resilience and community protection...</p>
+                        <a href="#" class="text-georgian-wine hover:text-georgian-terracotta font-semibold transition-colors" data-event="click:readArticle" data-article-id="svan-towers">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="text-center mt-12">
+                <button class="bg-georgian-wine hover:bg-opacity-90 text-white px-8 py-3 rounded-lg font-semibold transition-all" data-event="click:viewAllArticles">
+                    View All Stories
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: BlogSection -->
+
+    <!-- @COMPONENT: ContactSection [contact form, location info] -->
+    <section id="contact" class="py-20 bg-georgian-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-georgian-wine mb-4" data-bind="contact.title">
+                    Plan Your Journey
+                </h2>
+                <p class="text-xl text-georgian-gray max-w-3xl mx-auto" data-bind="contact.description">
+                    Ready to experience authentic Georgian culture? Get in touch with our local experts to plan your perfect cultural adventure.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <form class="space-y-6" data-event="submit:handleContactForm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="firstName" class="block text-sm font-semibold text-georgian-wine mb-2">First Name</label>
+                                <input type="text" id="firstName" name="firstName" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-georgian-wine focus:border-transparent" data-bind="form.firstName" required>
+                            </div>
+                            <div>
+                                <label for="lastName" class="block text-sm font-semibold text-georgian-wine mb-2">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-georgian-wine focus:border-transparent" data-bind="form.lastName" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-semibold text-georgian-wine mb-2">Email Address</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-georgian-wine focus:border-transparent" data-bind="form.email" required>
+                        </div>
+
+                        <div>
+                            <label for="phone" class="block text-sm font-semibold text-georgian-wine mb-2">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-georgian-wine focus:border-transparent" data-bind="form.phone">
+                        </div>
+
+                        <div>
+                            <label for="interest" class="block text-sm font-semibold text-georgian-wine mb-2">Area of Interest</label>
+                            <select id="interest" name="interest" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-georgian-wine focus:border-transparent" data-bind="form.interest" required>
+                                <option value="">Select your interest</option>
+                                <option value="wine-tours">Wine Tours</option>
+                                <option value="culinary">Culinary Experiences</option>
+                                <option value="cultural">Cultural Heritage Tours</option>
+                                <option value="adventure">Adventure Tourism</option>
+                                <option value="custom">Custom Experience</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="message" class="block text-sm font-semibold text-georgian-wine mb-2">Message</label>
+                            <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-georgian-wine focus:border-transparent resize-none" placeholder="Tell us about your ideal Georgian experience..." data-bind="form.message" required></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-georgian-wine hover:bg-opacity-90 text-white py-4 rounded-lg font-semibold text-lg transition-all">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="space-y-8">
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-6">Get in Touch</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-georgian-terracotta text-xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-georgian-wine mb-1">Address</h4>
+                                    <p class="text-georgian-gray" data-bind="contact.address">
+                                        Rustaveli Avenue 12<br>
+                                        Tbilisi 0108, Georgia
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <i class="fas fa-phone text-georgian-terracotta text-xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-georgian-wine mb-1">Phone</h4>
+                                    <p class="text-georgian-gray" data-bind="contact.phone">+995 32 200 0000</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <i class="fas fa-envelope text-georgian-terracotta text-xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-georgian-wine mb-1">Email</h4>
+                                    <p class="text-georgian-gray" data-bind="contact.email">info@georgianheritage.com</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <i class="fas fa-clock text-georgian-terracotta text-xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-georgian-wine mb-1">Business Hours</h4>
+                                    <p class="text-georgian-gray" data-bind="contact.hours">
+                                        Monday - Friday: 9:00 AM - 6:00 PM<br>
+                                        Saturday: 10:00 AM - 4:00 PM<br>
+                                        Sunday: Closed
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media Links -->
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h3 class="text-2xl font-serif font-bold text-georgian-wine mb-6">Follow Our Journey</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="bg-georgian-wine hover:bg-opacity-90 text-white p-3 rounded-lg transition-all" data-event="click:openSocial" data-platform="facebook">
+                                <i class="fab fa-facebook-f text-lg"></i>
+                            </a>
+                            <a href="#" class="bg-georgian-wine hover:bg-opacity-90 text-white p-3 rounded-lg transition-all" data-event="click:openSocial" data-platform="instagram">
+                                <i class="fab fa-instagram text-lg"></i>
+                            </a>
+                            <a href="#" class="bg-georgian-wine hover:bg-opacity-90 text-white p-3 rounded-lg transition-all" data-event="click:openSocial" data-platform="youtube">
+                                <i class="fab fa-youtube text-lg"></i>
+                            </a>
+                            <a href="#" class="bg-georgian-wine hover:bg-opacity-90 text-white p-3 rounded-lg transition-all" data-event="click:openSocial" data-platform="tripadvisor">
+                                <i class="fab fa-tripadvisor text-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: ContactSection -->
+
+    <!-- @COMPONENT: Footer [site links, legal info] -->
+    <footer class="bg-georgian-wine text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-serif font-bold mb-6">Georgian Heritage</h3>
+                    <p class="text-gray-300 mb-6" data-bind="footer.description">
+                        Discover the authentic beauty and rich cultural heritage of Georgia's ethnographic regions through immersive experiences and traditional hospitality.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors"><i class="fab fa-tripadvisor"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Regions</h4>
+                    <ul class="space-y-3 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.region">Kakheti</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.region">Svaneti</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.region">Samegrelo</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.region">Imereti</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.region">Racha</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.region">Javakheti</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Experiences</h4>
+                    <ul class="space-y-3 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.experience">Wine Tours</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.experience">Culinary Classes</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.experience">Cultural Tours</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.experience">Virtual Tours</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.experience">Online Store</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.experience">Custom Tours</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Company</h4>
+                    <ul class="space-y-3 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.company">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.company">Our Team</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.company">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.company">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.company">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-bind="footer.company">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-red-800 mt-12 pt-8 text-center">
+                <p class="text-gray-300" data-bind="footer.copyright">
+                    © 2024 Georgian Heritage. All rights reserved. | Crafted with love for Georgian culture.
+                </p>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <script>
+        // TODO: Implement business logic, API calls, and state management
+        
+        (function() {
+            // Mobile menu toggle functionality
+            const mobileMenuButton = document.querySelector('[data-event="click:toggleMobileMenu"]');
+            const mobileMenu = document.createElement('div');
+            mobileMenu.className = 'md:hidden fixed inset-x-0 top-16 bg-white shadow-lg z-50 hidden';
+            mobileMenu.innerHTML = `
+                <div class="px-4 py-6 space-y-4">
+                    <a href="#home" class="block text-georgian-wine hover:text-georgian-terracotta font-medium transition-colors">Home</a>
+                    <a href="#regions" class="block text-georgian-gray hover:text-georgian-wine font-medium transition-colors">Regions</a>
+                    <a href="#tours" class="block text-georgian-gray hover:text-georgian-wine font-medium transition-colors">Tours</a>
+                    <a href="#store" class="block text-georgian-gray hover:text-georgian-wine font-medium transition-colors">Store</a>
+                    <a href="#blog" class="block text-georgian-gray hover:text-georgian-wine font-medium transition-colors">Blog</a>
+                    <a href="#contact" class="block text-georgian-gray hover:text-georgian-wine font-medium transition-colors">Contact</a>
+                </div>
+            `;
+            document.body.appendChild(mobileMenu);
+
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Form submission handling
+            const contactForm = document.querySelector('[data-event="submit:handleContactForm"]');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // TODO: Implement actual form submission to backend
+                    alert('Thank you for your message! We will get back to you soon.');
+                });
+            }
+
+            // Shopping cart functionality mock
+            let cartCount = 0;
+            const cartBadge = document.querySelector('[data-bind="cart.itemCount"]');
+            
+            document.querySelectorAll('[data-event="click:addToCart"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    cartCount++;
+                    if (cartBadge) {
+                        cartBadge.textContent = cartCount;
+                    }
+                    // TODO: Implement actual cart functionality
+                    alert('Product added to cart!');
+                });
+            });
+
+            // Booking functionality mock
+            document.querySelectorAll('[data-event="click:bookTour"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tourId = this.getAttribute('data-tour-id');
+                    // TODO: Implement actual booking system
+                    alert(`Booking system will be implemented for tour: ${tourId}`);
+                });
+            });
+
+            // Gallery modal functionality mock
+            document.querySelectorAll('[data-event="click:openGallery"]').forEach(image => {
+                image.addEventListener('click', function() {
+                    // TODO: Implement image gallery modal
+                    console.log('Open gallery modal for image:', this.getAttribute('data-image-id'));
+                });
+            });
+
+            // Virtual tour launch mock
+            document.querySelectorAll('[data-event="click:start360Tour"], [data-event="click:watchVideo"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    // TODO: Implement 360° virtual tour functionality
+                    alert('Virtual tour feature will be implemented with 360° panoramic views');
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

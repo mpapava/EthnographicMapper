@@ -1,0 +1,781 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict n4ontYkOyMKdkv5W8zarn3qhxXMAzEi3WrPQNN9gTZuzdWp89s33KKrGXNjXQer
+
+-- Dumped from database version 18.0
+-- Dumped by pg_dump version 18.0
+
+-- Started on 2025-09-30 18:59:35
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 5 (class 2615 OID 2200)
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 219 (class 1259 OID 16390)
+-- Name: blog_posts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.blog_posts (
+    id integer NOT NULL,
+    title text NOT NULL,
+    title_ka text,
+    title_ru text,
+    excerpt text NOT NULL,
+    excerpt_ka text,
+    excerpt_ru text,
+    content text NOT NULL,
+    content_ka text,
+    content_ru text,
+    category text NOT NULL,
+    image_url text NOT NULL,
+    slug text NOT NULL,
+    published boolean DEFAULT false,
+    published_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT now()
+);
+
+
+--
+-- TOC entry 220 (class 1259 OID 16404)
+-- Name: blog_posts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.blog_posts_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 5015 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: blog_posts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.blog_posts_id_seq OWNED BY public.blog_posts.id;
+
+
+--
+-- TOC entry 221 (class 1259 OID 16405)
+-- Name: bookings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bookings (
+    id integer NOT NULL,
+    tour_id integer NOT NULL,
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    email text NOT NULL,
+    phone text NOT NULL,
+    number_of_people integer NOT NULL,
+    preferred_date text NOT NULL,
+    special_requests text,
+    status text DEFAULT 'pending'::text,
+    total_price numeric(10,2) NOT NULL,
+    created_at timestamp without time zone DEFAULT now()
+);
+
+
+--
+-- TOC entry 222 (class 1259 OID 16421)
+-- Name: bookings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bookings_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 5016 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: bookings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bookings_id_seq OWNED BY public.bookings.id;
+
+
+--
+-- TOC entry 223 (class 1259 OID 16422)
+-- Name: cart_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cart_items (
+    id integer NOT NULL,
+    session_id text NOT NULL,
+    product_id integer NOT NULL,
+    quantity integer DEFAULT 1 NOT NULL,
+    created_at timestamp without time zone DEFAULT now()
+);
+
+
+--
+-- TOC entry 224 (class 1259 OID 16433)
+-- Name: cart_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.cart_items_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 5017 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: cart_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.cart_items_id_seq OWNED BY public.cart_items.id;
+
+
+--
+-- TOC entry 225 (class 1259 OID 16434)
+-- Name: contacts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.contacts (
+    id integer NOT NULL,
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    email text NOT NULL,
+    phone text,
+    interest text NOT NULL,
+    message text NOT NULL,
+    status text DEFAULT 'new'::text,
+    created_at timestamp without time zone DEFAULT now()
+);
+
+
+--
+-- TOC entry 226 (class 1259 OID 16447)
+-- Name: contacts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.contacts_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 5018 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
+
+
+--
+-- TOC entry 227 (class 1259 OID 16448)
+-- Name: products; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.products (
+    id integer NOT NULL,
+    name text NOT NULL,
+    name_ka text,
+    name_ru text,
+    description text NOT NULL,
+    description_ka text,
+    description_ru text,
+    price numeric(10,2) NOT NULL,
+    category text NOT NULL,
+    image_url text NOT NULL,
+    in_stock boolean DEFAULT true,
+    featured boolean DEFAULT false
+);
+
+
+--
+-- TOC entry 228 (class 1259 OID 16461)
+-- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.products_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 5019 (class 0 OID 0)
+-- Dependencies: 228
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
+
+
+--
+-- TOC entry 229 (class 1259 OID 16462)
+-- Name: regions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.regions (
+    id integer NOT NULL,
+    name text NOT NULL,
+    name_ka text,
+    name_ru text,
+    description text NOT NULL,
+    description_ka text,
+    description_ru text,
+    image_url text NOT NULL,
+    main_attraction text NOT NULL,
+    slug text NOT NULL,
+    featured boolean DEFAULT false,
+    location text,
+    location_ka text,
+    location_ru text,
+    best_time_to_visit text,
+    best_time_to_visit_ka text,
+    best_time_to_visit_ru text,
+    climate text,
+    climate_ka text,
+    climate_ru text,
+    how_to_reach text,
+    how_to_reach_ka text,
+    how_to_reach_ru text
+);
+
+
+--
+-- TOC entry 230 (class 1259 OID 16474)
+-- Name: regions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.regions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 5020 (class 0 OID 0)
+-- Dependencies: 230
+-- Name: regions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.regions_id_seq OWNED BY public.regions.id;
+
+
+--
+-- TOC entry 231 (class 1259 OID 16475)
+-- Name: sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sessions (
+    sid character varying NOT NULL,
+    sess jsonb NOT NULL,
+    expire timestamp without time zone NOT NULL
+);
+
+
+--
+-- TOC entry 232 (class 1259 OID 16483)
+-- Name: tours; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tours (
+    id integer NOT NULL,
+    title text NOT NULL,
+    title_ka text,
+    title_ru text,
+    description text NOT NULL,
+    description_ka text,
+    description_ru text,
+    price numeric(10,2) NOT NULL,
+    duration text NOT NULL,
+    max_people integer NOT NULL,
+    includes text NOT NULL,
+    includes_ka text,
+    includes_ru text,
+    category text NOT NULL,
+    image_url text NOT NULL,
+    region_id integer,
+    featured boolean DEFAULT false
+);
+
+
+--
+-- TOC entry 233 (class 1259 OID 16498)
+-- Name: tours_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tours_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 5021 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: tours_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tours_id_seq OWNED BY public.tours.id;
+
+
+--
+-- TOC entry 234 (class 1259 OID 16499)
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id character varying NOT NULL,
+    email character varying,
+    first_name character varying,
+    last_name character varying,
+    profile_image_url character varying,
+    created_at timestamp without time zone DEFAULT now(),
+    updated_at timestamp without time zone DEFAULT now(),
+    username character varying,
+    password_hash character varying,
+    role character varying DEFAULT 'user'::character varying,
+    is_active boolean DEFAULT true
+);
+
+
+--
+-- TOC entry 4796 (class 2604 OID 16509)
+-- Name: blog_posts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_posts ALTER COLUMN id SET DEFAULT nextval('public.blog_posts_id_seq'::regclass);
+
+
+--
+-- TOC entry 4799 (class 2604 OID 16510)
+-- Name: bookings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bookings ALTER COLUMN id SET DEFAULT nextval('public.bookings_id_seq'::regclass);
+
+
+--
+-- TOC entry 4802 (class 2604 OID 16511)
+-- Name: cart_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cart_items ALTER COLUMN id SET DEFAULT nextval('public.cart_items_id_seq'::regclass);
+
+
+--
+-- TOC entry 4805 (class 2604 OID 16512)
+-- Name: contacts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contacts ALTER COLUMN id SET DEFAULT nextval('public.contacts_id_seq'::regclass);
+
+
+--
+-- TOC entry 4808 (class 2604 OID 16513)
+-- Name: products id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.products_id_seq'::regclass);
+
+
+--
+-- TOC entry 4811 (class 2604 OID 16514)
+-- Name: regions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.regions ALTER COLUMN id SET DEFAULT nextval('public.regions_id_seq'::regclass);
+
+
+--
+-- TOC entry 4813 (class 2604 OID 16515)
+-- Name: tours id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tours ALTER COLUMN id SET DEFAULT nextval('public.tours_id_seq'::regclass);
+
+
+--
+-- TOC entry 4994 (class 0 OID 16390)
+-- Dependencies: 219
+-- Data for Name: blog_posts; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.blog_posts (id, title, title_ka, title_ru, excerpt, excerpt_ka, excerpt_ru, content, content_ka, content_ru, category, image_url, slug, published, published_at, created_at) FROM stdin;
+11	The Sacred Art of Georgian Supra	ქართული სუფრის წმინდა ხელოვნება	Священное искусство грузинского супра	Discover the deep cultural significance behind Georgia's traditional feast and its role in preserving national identity.	აღმოაჩინეთ ღრმა კულტურული მნიშვნელობა ქართული ტრადიციული ზაფხულის მიღმა და მისი როლი ეროვნული იდენტობის შენარჩუნებაში.	Откройте глубокое культурное значение грузинского традиционного пира и его роль в сохранении национальной идентичности.	The Georgian supra is more than just a feast—it's a sacred ritual that connects generations, honors guests, and celebrates life itself...	\N	\N	Culture	https://images.unsplash.com/photo-1574484284002-952d92456975	sacred-art-georgian-supra	t	2024-01-15 00:00:00	2024-01-15 00:00:00
+12	Winemaking Traditions in Modern Georgia	ღვინის დამზადების ტრადიციები თანამედროვე საქართველოში	Традиции виноделия в современной Грузии	How Georgia's ancient qvevri winemaking method is experiencing a renaissance in the 21st century.	როგორ განიცდის საქართველოს უძველესი ქვევრის ღვინის დამზადების მეთოდი რენესანსს XXI საუკუნეში.	Как древний грузинский метод виноделия квеври переживает ренессанс в XXI веке.	Georgia's 8,000-year winemaking tradition continues to thrive in the modern era, blending ancient techniques with contemporary innovation...	\N	\N	Wine	https://images.unsplash.com/photo-1578662996442-48f60103fc96	winemaking-traditions-modern-georgia	t	2024-01-10 00:00:00	2024-01-10 00:00:00
+13	The Legend of Queen Tamar and Georgian Unity	მეფე თამარის ლეგენდა და ქართული ერთობა	Легенда о царице Тамар и грузинском единстве	Explore the legendary reign of Queen Tamar and how her leadership shaped Georgian identity and cultural traditions.	გამოიკვლიეთ მეფე თამარის ლეგენდარული მეფობა და როგორ ჩამოაყალიბა მისმა ლიდერობამ ქართული იდენტობა და კულტურული ტრადიციები.	Исследуйте легендарное правление царицы Тамар и то, как ее лидерство сформировало грузинскую идентичность и культурные традиции.	Queen Tamar of Georgia (1184-1213) stands as one of the most revered figures in Georgian history, representing the golden age of Georgian culture and territorial expansion. Her reign marked a period of unprecedented prosperity, cultural flourishing, and military success that continues to inspire Georgians today...	\N	\N	History	https://images.unsplash.com/photo-1594736797933-d0201ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	legend-queen-tamar-georgian-unity	t	2024-01-05 00:00:00	2024-01-05 00:00:00
+14	Polyphonic Singing: Georgia's Musical Soul	პოლიფონიური სიმღერა: საქართველოს მუსიკალური სული	Полифоническое пение: музыкальная душа Грузии	Discover the ancient tradition of Georgian polyphonic singing and its profound cultural significance.	აღმოაჩინეთ ქართული პოლიფონიური სიმღერის უძველესი ტრადიცია და მისი ღრმა კულტურული მნიშვნელობა.	Откройте древнюю традицию грузинского полифонического пения и его глубокое культурное значение.	Georgian polyphonic singing, recognized by UNESCO as a Masterpiece of Oral and Intangible Heritage of Humanity, represents one of the oldest and most complex vocal traditions in the world. This ancient art form, passed down through generations, embodies the very essence of Georgian spirituality and community...	\N	\N	Music	https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	polyphonic-singing-georgia-musical-soul	t	2023-12-28 00:00:00	2023-12-28 00:00:00
+15	The Ancient Art of Cloisonné: Georgian Metalwork	კლუაზონეს უძველესი ხელოვნება: ქართული ლითონის მუშაობა	Древнее искусство клуазоне: грузинская работа по металлу	Learn about Georgia's masterful tradition of cloisonné metalwork and its artistic heritage.	გაიგეთ საქართველოს ოსტატური კლუაზონეს ლითონის მუშაობის ტრადიციისა და მისი მხატვრული მემკვიდრეობის შესახებ.	Узнайте о мастерской традиции грузинской работы по металлу клуазоне и ее художественном наследии.	Georgian cloisonné enamelwork represents one of the finest traditions of medieval decorative arts. From the intricate jewelry of ancient Colchis to the magnificent ecclesiastical objects of the Middle Ages, Georgian artisans have mastered the delicate technique of creating miniature worlds in precious metals...	\N	\N	Crafts	https://images.unsplash.com/photo-1515377905703-c4788e51af15?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	ancient-art-cloisonne-georgian-metalwork	t	2023-12-20 00:00:00	2023-12-20 00:00:00
+16	Sacred Mountains: Spirituality in Georgian Highlands	წმინდა მთები: სულიერება ქართულ მაღალმთიანეთში	Священные горы: духовность в грузинских высокогорьях	Explore the spiritual significance of Georgia's sacred mountains and their role in cultural preservation.	გამოიკვლიეთ საქართველოს წმინდა მთების სულიერი მნიშვნელობა და მათი როლი კულტურული შენარჩუნებაში.	Исследуйте духовное значение священных гор Грузии и их роль в сохранении культуры.	In Georgian culture, mountains are not merely geographical features but sacred spaces where earth meets heaven. From the mystical peaks of Svaneti to the spiritual retreats of Samtskhe, Georgia's highland regions have served as centers of religious devotion and cultural preservation for over a millennium...	\N	\N	Spirituality	https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	sacred-mountains-spirituality-georgian-highlands	t	2023-12-15 00:00:00	2023-12-15 00:00:00
+17	The Living Language: Georgian Script and Literature	ცოცხალი ენა: ქართული წერა და ლიტერატურა	Живой язык: грузинская письменность и литература	Discover the unique Georgian script and its vital role in preserving literature and cultural identity.	აღმოაჩინეთ უნიკალური ქართული წერა და მისი მნიშვნელოვანი როლი ლიტერატურისა და კულტურული იდენტობის შენარჩუნებაში.	Откройте уникальную грузинскую письменность и ее важную роль в сохранении литературы и культурной идентичности.	The Georgian alphabet, one of only 14 unique writing systems in the world, represents a 1,500-year journey of linguistic evolution and cultural identity. From ancient manuscripts preserved in monastery libraries to contemporary literature that captures the Georgian soul, the written word has been the vessel of national consciousness...	\N	\N	Literature	https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	living-language-georgian-script-literature	t	2023-12-10 00:00:00	2023-12-10 00:00:00
+\.
+
+
+--
+-- TOC entry 4996 (class 0 OID 16405)
+-- Dependencies: 221
+-- Data for Name: bookings; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.bookings (id, tour_id, first_name, last_name, email, phone, number_of_people, preferred_date, special_requests, status, total_price, created_at) FROM stdin;
+\.
+
+
+--
+-- TOC entry 4998 (class 0 OID 16422)
+-- Dependencies: 223
+-- Data for Name: cart_items; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.cart_items (id, session_id, product_id, quantity, created_at) FROM stdin;
+8	anonymous	22	1	2025-09-29 13:11:29.511074
+\.
+
+
+--
+-- TOC entry 5000 (class 0 OID 16434)
+-- Dependencies: 225
+-- Data for Name: contacts; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.contacts (id, first_name, last_name, email, phone, interest, message, status, created_at) FROM stdin;
+\.
+
+
+--
+-- TOC entry 5002 (class 0 OID 16448)
+-- Dependencies: 227
+-- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.products (id, name, name_ka, name_ru, description, description_ka, description_ru, price, category, image_url, in_stock, featured) FROM stdin;
+22	Svan Salt	სვანური მარილი	Сванская соль	Traditional seasoning blend from Svaneti highlands.	ტრადიციული სანელებლების ნაზავი სვანეთის მთებიდან.	Традиционная смесь приправ из высокогорной Сванетии.	12.00	Food	https://images.unsplash.com/photo-1596040033229-a9821ebd058d	t	f
+23	Georgian Chacha	ქართული ჭაჭა	Грузинская чача	Traditional Georgian grape brandy, 40% alcohol.	ტრადიციული ქართული ყურძნის ბრენდი, 40% ალკოჰოლი.	Традиционный грузинский виноградный бренди, 40% алкоголя.	35.00	Spirits	https://images.unsplash.com/photo-1569529465841-dfecdab7503b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	t	f
+24	Adjarian Honey	აჭარული თაფლი	Аджарский мед	Pure mountain honey from Adjara's pristine forests.	სუფთა მთის თაფლი აჭარის უბიწო ტყეებიდან.	Чистый горный мед из нетронутых лесов Аджарии.	18.00	Food	https://images.unsplash.com/photo-1587049352851-8d4e89133924?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	t	t
+25	Georgian Khinkali Spice Mix	ქართული ხინკლის სანელებლები	Грузинская смесь специй для хинкали	Authentic spice blend for traditional Georgian dumplings.	ავთენტური სანელებლების ნაზავი ტრადიციული ქართული ხინკლისთვის.	Аутентичная смесь специй для традиционных грузинских пельменей.	8.00	Food	https://images.unsplash.com/photo-1596040033229-a9821ebd058d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	t	f
+26	Rkatsiteli White Wine 2021	რქაწითელი თეთრი ღვინო 2021	Ркацители белое вино 2021	Crisp white wine from Georgia's indigenous grape variety.	გამბრუნებული თეთრი ღვინო საქართველოს ადგილობრივი ყურძნის ჯიშიდან.	Свежее белое вино из местного грузинского сорта винограда.	38.00	Wine	https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	t	t
+27	Georgian Churchkhela	ქართული ჩურჩხელა	Грузинская чурчхела	Traditional Georgian candle-shaped candy made with grape juice and nuts.	ტრადიციული ქართული სანთლის ფორმის ტკბილეული ყურძნის წვენითა და კაკლით.	Традиционная грузинская свеча-конфета из виноградного сока и орехов.	15.00	Food	https://images.unsplash.com/photo-1587049352851-8d4e89133924?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	t	f
+28	Traditional Georgian Clay Wine Jug	ტრადიციული ქართული თიხის ღვინის ქოთანი	Традиционный грузинский глиняный винный кувшин	Handcrafted clay vessel for storing and serving Georgian wine.	ხელნაკეთი თიხის ჭურჭელი ქართული ღვინის შესანახად და მიწოდებისთვის.	Ручной работы глиняный сосуд для хранения и подачи грузинского вина.	65.00	Souvenirs	https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	t	t
+21	Kakheti Saperavi 2020	კახური საფერავი 2020	Кахетинский Саперави 2020	Premium Georgian red wine from ancient Qvevri method.	პრემიუმ ქართული წითელი ღვინო უძველესი ქვევრის მეთოდით.	Премиальное грузинское красное вино древним методом квеври.	45.00	wine	https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb	t	t
+\.
+
+
+--
+-- TOC entry 5004 (class 0 OID 16462)
+-- Dependencies: 229
+-- Data for Name: regions; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.regions (id, name, name_ka, name_ru, description, description_ka, description_ru, image_url, main_attraction, slug, featured, location, location_ka, location_ru, best_time_to_visit, best_time_to_visit_ka, best_time_to_visit_ru, climate, climate_ka, climate_ru, how_to_reach, how_to_reach_ka, how_to_reach_ru) FROM stdin;
+34	Imereti	იმერეთი	Имерети	The central region of Georgia, featuring diverse landscapes from caves to vineyards.	საქართველოს ცენტრალური რეგიონი, რომელიც ხასიათდება მრავალფეროვანი ლანდშაფტებით მღვიმეებიდან ვენახებამდე.	Центральный регион Грузии с разнообразными ландшафтами от пещер до виноградников.	https://images.unsplash.com/photo-1536431311719-398b6704d4cc	Prometheus Cave and vineyards	imereti	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+35	Racha	რაჭა	Рача	A mountainous region famous for its mineral waters and traditional mountain culture.	მთიანი რეგიონი, რომელიც ცნობილია თავისი მინერალური წყლებითა და ტრადიციული მთის კულტურით.	Горный регион, известный своими минеральными водами и традиционной горной культурой.	https://images.unsplash.com/photo-1506905925346-21bda4d32df4	Mineral springs and mountain villages	racha	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+36	Javakheti	ჯავახეთი	Джавахети	A high plateau region with unique volcanic landscapes and ancient cultural heritage.	მაღალმთიანი პლატო რეგიონი უნიკალური ვულკანური ლანდშაფტებითა და უძველესი კულტურული მემკვიდრეობით.	Высокогорный плато-регион с уникальными вулканическими ландшафтами и древним культурным наследием.	https://images.unsplash.com/photo-1557911619-207467c1cd88?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	Volcanic plateaus and ancient sites	javakheti	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+31	Kakheti	კახეთი	Кахетия	The wine region of Georgia1, home to ancient winemaking traditions and spectacular vineyard landscapes.	საქართველოს ღვინის რეგიონი, უძველესი ღვინის დამზადების ტრადიციებისა და ღვინის ვენახების მშვენიერი ლანდშაფტების სამშობლო.	Винодельческий регион Грузии, родина древних традиций виноделия и великолепных виноградных пейзажей.	https://images.unsplash.com/photo-1578662996442-48f60103fc96	Ancient wine cellars and vineyards	kakheti	t	111			222						333		
+32	Svaneti	სვანეთი	Сванетия	A highland region known for its medieval towers, unique culture, and breathtaking mountain landscapes.	მთიანი რეგიონი, რომელიც ცნობილია თავისი შუა საუკუნეების კოშკებით, უნიკალური კულტურითა და თვალწარმტაცი მთის ლანდშაფტებით.	Горный регион, известный своими средневековыми башнями, уникальной культурой и захватывающими горными пейзажами.	https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	Medieval Svan towers	svaneti	t	test 1			test 2			test 3			test 4		
+33	Samegrelo	სამეგრელო	Самегрело	A region rich in Mingrelian culture, known for its distinctive cuisine and warm hospitality.	რეგიონი მდიდარი მეგრული კულტურით, ცნობილია თავისი გამორჩეული სამზარეულოთი და თბილი სტუმარმასპინძლობით.	Регион, богатый мегрельской культурой, известный своей отличительной кухней и теплым гостеприимством.	https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	Mingrelian cultural sites	samegrelo	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+\.
+
+
+--
+-- TOC entry 5006 (class 0 OID 16475)
+-- Dependencies: 231
+-- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.sessions (sid, sess, expire) FROM stdin;
+yhgSzFRaeXJHFBiK_re_4TsTfe1uNYw0	{"cookie": {"path": "/", "secure": true, "expires": "2025-10-04T21:19:42.367Z", "httpOnly": true, "originalMaxAge": 604800000}}	2025-10-04 21:19:50
+jzDt5dkidzpo7los_s5RItNRyp2CCbZ0	{"cookie": {"path": "/", "secure": true, "expires": "2025-10-04T20:46:51.956Z", "httpOnly": true, "originalMaxAge": 604800000}, "passport": {"user": {"claims": {"aud": "bf3cd90f-4580-4a18-9d29-e9e05f42131a", "exp": 1759009611, "iat": 1759006011, "iss": "https://test-mock-oidc.replit.app/", "jti": "1824fa0bb5e83ff14794726a1ad45eec", "sub": "Cdm45P", "email": "Cdm45P@example.com", "auth_time": 1759006011, "last_name": "Doe", "first_name": "John"}, "expires_at": 1759009611, "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ijc4MDgyZTlmZjVhOTA1YjIifQ.eyJpc3MiOiJodHRwczovL3Rlc3QtbW9jay1vaWRjLnJlcGxpdC5hcHAvIiwiaWF0IjoxNzU5MDA2MDExLCJleHAiOjE3NTkwMDk2MTEsInN1YiI6IkNkbTQ1UCIsImVtYWlsIjoiQ2RtNDVQQGV4YW1wbGUuY29tIiwiZmlyc3RfbmFtZSI6IkpvaG4iLCJsYXN0X25hbWUiOiJEb2UifQ.E5uqAa4OzKgcf0-mebSrHfJMp52xs2GLknlAL1x7SzF5DpzzExQf2AkpRF7T5nW1NHnAE9ZCUudS6ebMUgyT1loKJmq85MEMdEo64jxNhRgnfkS_1s0yqiuXUljYwgcEHSJy0kkA_HpLghX8WnTLP7BOfFqZFW72Ag3owIrJ49_dDhE7EqNSTlpjqjxVAYM_L-DyJA3xWYDYUik-HzX2C8NyMsDHn_8nRtH4iLS24c-psnVHkNtQV1d3q-pJrExa1XpEmapw_oFUfNozUzrX1o-sWX3KqUlSPLKuYDbulMmSb05XSKtkYDOrh-tEJiDLz6OX7BziQLmiQGbv33ov8A", "refresh_token": "eyJzdWIiOiJDZG00NVAiLCJlbWFpbCI6IkNkbTQ1UEBleGFtcGxlLmNvbSIsImZpcnN0X25hbWUiOiJKb2huIiwibGFzdF9uYW1lIjoiRG9lIn0"}}}	2025-10-04 20:48:15
+\.
+
+
+--
+-- TOC entry 5007 (class 0 OID 16483)
+-- Dependencies: 232
+-- Data for Name: tours; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.tours (id, title, title_ka, title_ru, description, description_ka, description_ru, price, duration, max_people, includes, includes_ka, includes_ru, category, image_url, region_id, featured) FROM stdin;
+20	Kakheti Wine Heritage Tour	კახეთის ღვინის მემკვიდრეობის ტური	Тур винного наследия Кахетии	Explore the ancient winemaking traditions of Georgia's premier wine region.	გამოიკვლიეთ საქართველოს მთავარი ღვინის რეგიონის უძველესი ღვინის დამზადების ტრადიციები.	Исследуйте древние традиции виноделия главного винного региона Грузии.	150.00	Full Day	12	Transportation, wine tasting, traditional lunch, guide	\N	\N	Cultural	https://images.unsplash.com/photo-1578662996442-48f60103fc96	31	t
+21	Svaneti Mountain Adventure	სვანეთის მთის თავგადასავალი	Горное приключение в Сванетии	Discover the medieval towers and mountain culture of Upper Svaneti.	აღმოაჩინეთ ზემო სვანეთის შუა საუკუნეების კოშკები და მთის კულტურა.	Откройте для себя средневековые башни и горную культуру Верхней Сванетии.	200.00	2 Days	8	Mountain guide, accommodation, meals, transportation	\N	\N	Adventure	https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	32	t
+22	Samegrelo Cultural Experience	სამეგრელოს კულტურული გამოცდილება	Культурный опыт Самегрело	Immerse yourself in the unique Mingrelian culture and cuisine.	ჩაეფლვეთ უნიკალურ მეგრულ კულტურასა და სამზარეულოში.	Погрузитесь в уникальную мегрельскую культуру и кухню.	120.00	Half Day	15	Cultural guide, traditional meal, local crafts workshop	\N	\N	Cultural	https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	33	f
+23	Tbilisi Historical Walking Tour	თბილისის ისტორიული ფეხით ტური	Исторический пешеходный тур по Тбилиси	Explore the old town and discover centuries of Georgian history.	გამოიკვლიეთ ძველი ქალაქი და აღმოაჩინეთ საქართველოს საუკუნეების ისტორია.	Исследуйте старый город и откройте для себя века грузинской истории.	80.00	Half Day	20	Professional guide, entrance fees, traditional snacks	\N	\N	Cultural	https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	31	t
+24	Samtskhe-Javakheti Adventure	სამცხე-ჯავახეთის თავგადასავალი	Приключение в Самцхе-Джавахети	Discover ancient fortresses and volcanic landscapes.	აღმოაჩინეთ უძველესი ციხე-სიმაგრეები და ვულკანური ლანდშაფტები.	Откройте древние крепости и вулканические пейзажи.	180.00	Full Day	10	Transportation, guide, lunch, fortress entrance	\N	\N	Adventure	https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	34	f
+25	Adjara Coastal Discovery	აჭარის სანაპირო აღმოჩენა	Открытие побережья Аджарии	Experience the unique blend of Georgian and Turkish cultures by the Black Sea.	გამოიცადეთ ქართული და თურქული კულტურების უნიკალური ნაზავი შავი ზღვის სანაპიროზე.	Испытайте уникальное сочетание грузинской и турецкой культур у Черного моря.	140.00	Full Day	15	Beach access, cultural sites, traditional Adjarian khachapuri	\N	\N	Cultural	https://images.unsplash.com/photo-1536431311719-398b6704d4cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	35	t
+26	Imereti Cave Exploration	იმერეთის მღვიმეების აღმოჩენა	Исследование пещер Имерети	Journey through Georgia's most spectacular underground caves.	მოგზაურობა საქართველოს ყველაზე ეფექტურ მიწისქვეშა მღვიმეებში.	Путешествие по самым зрелищным подземным пещерам Грузии.	100.00	Half Day	12	Cave entrance, safety equipment, guide	\N	\N	Adventure	https://images.unsplash.com/photo-1551972251-12070d63502a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80	36	f
+\.
+
+
+--
+-- TOC entry 5009 (class 0 OID 16499)
+-- Dependencies: 234
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.users (id, email, first_name, last_name, profile_image_url, created_at, updated_at, username, password_hash, role, is_active) FROM stdin;
+1a79fe4a-0320-42e0-8c34-7a28633b2ccb	user_x-v7fy@test.com	Test	User	\N	2025-09-27 21:27:09.398	2025-09-27 21:38:50.043	user_x-v7fy	$2b$12$1ByWDnbnYhmBczE.01q/SejQrO6X6UQ/gex7HeUHK0h/0YjbtUaaK	user	t
+2d70e58a-553e-4f19-8080-0e3fa752def8	test@example.com	Test	User	\N	2025-09-27 21:34:52.528	2025-09-27 21:38:52.86	testuser	$2b$12$IT0eD8bxOGslD2634Ncnm.avcIs6M2kTnNEcT/zfANOyEruxgTlvi	admin	t
+520e1bd1-0b08-4654-8e31-d56fba48ae3e	admin@test.com	Admin	User	\N	2025-09-27 22:15:05.144	2025-09-27 22:15:05.144	admin_MEMK7c	$2b$12$W6R3gTD5za7njlUct37hEOwftqMN78Aq4YG3rHLw5c89HyjMKMWn2	admin	t
+44296738	mishapap@gmail.com	MIKHEIL	PAPAVA		2025-06-30 05:43:39.258234	2025-09-27 22:17:18.12	updated-user-CaZTNV	\N	user	t
+Cdm45P	Cdm45P@example.com	John	Doe		2025-09-27 20:46:51.830925	2025-09-27 22:21:50.798	updated-user-mODqve	\N	user	t
+\.
+
+
+--
+-- TOC entry 5022 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: blog_posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.blog_posts_id_seq', 17, true);
+
+
+--
+-- TOC entry 5023 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: bookings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.bookings_id_seq', 1, false);
+
+
+--
+-- TOC entry 5024 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: cart_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.cart_items_id_seq', 8, true);
+
+
+--
+-- TOC entry 5025 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: contacts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.contacts_id_seq', 1, false);
+
+
+--
+-- TOC entry 5026 (class 0 OID 0)
+-- Dependencies: 228
+-- Name: products_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.products_id_seq', 28, true);
+
+
+--
+-- TOC entry 5027 (class 0 OID 0)
+-- Dependencies: 230
+-- Name: regions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.regions_id_seq', 36, true);
+
+
+--
+-- TOC entry 5028 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: tours_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.tours_id_seq', 26, true);
+
+
+--
+-- TOC entry 4820 (class 2606 OID 16517)
+-- Name: blog_posts blog_posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_posts
+    ADD CONSTRAINT blog_posts_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4822 (class 2606 OID 16519)
+-- Name: blog_posts blog_posts_slug_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_posts
+    ADD CONSTRAINT blog_posts_slug_unique UNIQUE (slug);
+
+
+--
+-- TOC entry 4824 (class 2606 OID 16521)
+-- Name: bookings bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bookings
+    ADD CONSTRAINT bookings_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4826 (class 2606 OID 16523)
+-- Name: cart_items cart_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cart_items
+    ADD CONSTRAINT cart_items_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4828 (class 2606 OID 16525)
+-- Name: contacts contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contacts
+    ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4830 (class 2606 OID 16527)
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4832 (class 2606 OID 16529)
+-- Name: regions regions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.regions
+    ADD CONSTRAINT regions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4834 (class 2606 OID 16531)
+-- Name: regions regions_slug_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.regions
+    ADD CONSTRAINT regions_slug_unique UNIQUE (slug);
+
+
+--
+-- TOC entry 4837 (class 2606 OID 16533)
+-- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT sessions_pkey PRIMARY KEY (sid);
+
+
+--
+-- TOC entry 4839 (class 2606 OID 16535)
+-- Name: tours tours_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tours
+    ADD CONSTRAINT tours_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4841 (class 2606 OID 16537)
+-- Name: users users_email_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_unique UNIQUE (email);
+
+
+--
+-- TOC entry 4843 (class 2606 OID 16539)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4835 (class 1259 OID 16540)
+-- Name: IDX_session_expire; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "IDX_session_expire" ON public.sessions USING btree (expire);
+
+
+--
+-- TOC entry 4844 (class 2606 OID 16541)
+-- Name: bookings bookings_tour_id_tours_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bookings
+    ADD CONSTRAINT bookings_tour_id_tours_id_fk FOREIGN KEY (tour_id) REFERENCES public.tours(id);
+
+
+--
+-- TOC entry 4845 (class 2606 OID 16546)
+-- Name: cart_items cart_items_product_id_products_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cart_items
+    ADD CONSTRAINT cart_items_product_id_products_id_fk FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
+-- TOC entry 4846 (class 2606 OID 16551)
+-- Name: tours tours_region_id_regions_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tours
+    ADD CONSTRAINT tours_region_id_regions_id_fk FOREIGN KEY (region_id) REFERENCES public.regions(id);
+
+
+-- Completed on 2025-09-30 18:59:35
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict n4ontYkOyMKdkv5W8zarn3qhxXMAzEi3WrPQNN9gTZuzdWp89s33KKrGXNjXQer
+
