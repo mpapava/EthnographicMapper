@@ -17,8 +17,8 @@ export const translations: Translations = {
 
   // Hero Section
   'hero.title': { 
-    en: 'Discover Georgia\'s Ethnographic', 
-    ka: 'აღმოაჩინეთ საქართველოს ეთნოგრაფიული', 
+    en: 'Ethnographic Museum', 
+    ka: 'ეთნოგრაფიული მუზეუმი', 
     ru: 'Откройте этнографическое' 
   },
   'hero.subtitle': { 

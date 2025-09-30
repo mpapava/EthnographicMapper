@@ -31,10 +31,10 @@ export default function HeroSection() {
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold mb-6">
           {getTranslation('hero.title', language)}
           <br />
-          <span className="georgian-gold">{language === 'ka' ? 'მემკვიდრეობა' : language === 'ru' ? 'Наследие' : 'Heritage'}</span>
+          <span className="georgian-gold">"Saarako"</span>
         </h1>
         <p className="text-lg md:text-xl lg:text-2xl mb-8 font-light max-w-3xl mx-auto">
-          {getTranslation('hero.subtitle', language)}
+          
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
