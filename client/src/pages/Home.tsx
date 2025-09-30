@@ -102,6 +102,28 @@ export default function Home() {
 
       <Header />
       <HeroSection />
+	  <section className="py-20 bg-white">
+        <div className="max-w-screen-xl mx-auto flex flex-wrap items-center py-12 md:py-0">
+          {/* Left side with image */}
+          <div className="w-full lg:w-1/2">
+            <img
+              src="/@fs/home/deploy/apps/EthnographicMapper/attached_assets/block2.jpg"
+              alt="Vintage horse-drawn carriage in a rural Georgian setting"
+              className="w-full h-auto"
+            />
+          </div>
+
+          {/* Right side with text */}
+          <div className="w-full lg:w-1/2 lg:pl-16 px-8 mt-8 lg:mt-0">
+            <h2 className="text-4xl font-bold text-gray-800 mb-6">
+              გადადით სხვა დროში
+            </h2>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              არის ადგილები, სადაც მხოლოდ სწავლობ ისტორიას — და არის ადგილები, სადაც ნამდვილად გრძნობ მას. Saarako გიხსნით ძველი საქართველოს კარებს, სადაც ტრადიციები, ისტორიები და ემოციები გარს გხვდება ყოველ ნაბიჯზე. ეს არ არის მხოლოდ ტურისტული ყურება, არამედ სიღრმისეული გამოცდილება ყველა შეგრძნებით.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Regions Section */}
       <section id="regions" className="py-20 bg-white">
