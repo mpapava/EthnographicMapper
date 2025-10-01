@@ -102,7 +102,7 @@ export default function Home() {
 
       <Header />
       <HeroSection />
-	  <section className="py-20 bg-white">
+	  <section className="bg-white">
         <div className="max-w-screen-xl mx-auto flex flex-wrap items-center py-12 md:py-0">
           {/* Left side with image */}
           <div className="w-full lg:w-1/2">
@@ -116,15 +116,40 @@ export default function Home() {
           {/* Right side with text */}
           <div className="w-full lg:w-1/2 lg:pl-16 px-8 mt-8 lg:mt-0">
             <h2 className="text-4xl font-bold text-gray-800 mb-6">
-              გადადით სხვა დროში
+              {getTranslation('block1.title', language)}
             </h2>
             <p className="text-lg text-gray-700 leading-relaxed">
-              არის ადგილები, სადაც მხოლოდ სწავლობ ისტორიას — და არის ადგილები, სადაც ნამდვილად გრძნობ მას. Saarako გიხსნით ძველი საქართველოს კარებს, სადაც ტრადიციები, ისტორიები და ემოციები გარს გხვდება ყოველ ნაბიჯზე. ეს არ არის მხოლოდ ტურისტული ყურება, არამედ სიღრმისეული გამოცდილება ყველა შეგრძნებით.
+              {getTranslation('block1.body', language)}
             </p>
           </div>
         </div>
       </section>
+	  
+	  <section className="bg-white">
+		  <div className="max-w-screen-xl mx-auto flex flex-wrap items-center py-12 md:py-0">
+			{/* Left side with text */}
+			<div className="w-full lg:w-1/2 lg:pr-16 px-8 mb-8 lg:mb-0">
+			  <h2 className="text-4xl font-bold text-gray-800 mb-6">
+				{getTranslation('block2.title', language)}
+			  </h2>
+			  <p className="text-lg text-gray-700 leading-relaxed">
+				{getTranslation('block2.body', language)}
+			  </p>
+			</div>
 
+			{/* Right side with image */}
+			<div className="w-full lg:w-1/2">
+			  <img
+				src="/@fs/home/deploy/apps/EthnographicMapper/attached_assets/block3.jpg"
+				alt="Vintage horse-drawn carriage in a rural Georgian setting"
+				className="w-full h-auto"
+			  />
+			</div>
+		  </div>
+		</section>
+
+
+		
       {/* Regions Section */}
       <section id="regions" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -221,135 +246,64 @@ export default function Home() {
       </section>
 
       {/* Tours Section */}
-      <section id="tours" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-16">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold georgian-wine mb-4">
-                Authentic Georgian Experiences
-              </h2>
-              <p className="text-xl georgian-gray max-w-3xl">
-                Join us for carefully crafted tours that immerse you in Georgia's rich cultural heritage, from wine tasting to traditional cooking classes.
-              </p>
-            </div>
-            <div className="flex space-x-2">
-              <button
-                onClick={scrollToursPrev}
-                className="p-2 rounded-full bg-georgian-wine hover:bg-georgian-wine/90 text-white transition-colors"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <button
-                onClick={scrollToursNext}
-                className="p-2 rounded-full bg-georgian-wine hover:bg-georgian-wine/90 text-white transition-colors"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-
-          {toursLoading ? (
-            <div className="flex space-x-6">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="flex-none w-80 space-y-3">
-                  <Skeleton className="h-48 w-full rounded-xl" />
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="relative">
-              <div className="embla overflow-hidden" ref={toursEmblaRef} style={{ touchAction: 'pan-y' }}>
-                <div className="flex space-x-6 pb-4" style={{ willChange: 'transform' }}>
-                  {tours.map((tour) => (
-                    <div key={tour.id} className="flex-none w-80">
-                      <TourCard tour={tour} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-          )}
-
-          <div className="text-center mt-12">
-            <p className="georgian-gray mb-4">Looking for a custom experience?</p>
-            <Link href="/tours">
-              <Button
-                variant="outline"
-                className="border-2 border-georgian-wine text-georgian-wine hover:bg-georgian-wine hover:text-white px-8 py-3 font-semibold"
-              >
-                View All Tours
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Store Section */}
-      <section id="store" className="py-20 bg-georgian-cream">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-16">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold georgian-wine mb-4">
-                Authentic Georgian Products
-              </h2>
-              <p className="text-xl georgian-gray max-w-3xl">
-                Take home the taste and craftsmanship of Georgia with our curated selection of wines, artisanal crafts, and traditional delicacies.
-              </p>
-            </div>
-            <div className="flex space-x-2">
-              <button
-                onClick={scrollProductsPrev}
-                className="p-2 rounded-full bg-georgian-wine hover:bg-georgian-wine/90 text-white transition-colors"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <button
-                onClick={scrollProductsNext}
-                className="p-2 rounded-full bg-georgian-wine hover:bg-georgian-wine/90 text-white transition-colors"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-
-          {productsLoading ? (
-            <div className="flex space-x-6">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="flex-none w-72 space-y-3">
-                  <Skeleton className="h-48 w-full rounded-xl" />
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="relative">
-              <div className="embla overflow-hidden" ref={productsEmblaRef} style={{ touchAction: 'pan-y' }}>
-                <div className="flex space-x-6 pb-4" style={{ willChange: 'transform' }}>
-                  {products.map((product) => (
-                    <div key={product.id} className="flex-none w-72">
-                      <ProductCard product={product} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-          )}
-
-          <div className="text-center mt-12">
-            <Link href="/store">
-              <Button className="bg-georgian-wine hover:bg-georgian-wine/90 text-white px-8 py-3 font-semibold">
-                {getTranslation('common.viewAll', language)} Products
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
+      
+	  <section className="bg-white py-5">
+		  <div className="max-w-screen-xl mx-auto flex flex-wrap items-center py-12 md:py-0" >
+			{/* Left side with text */}
+			<div className="w-full lg:pr-16 px-8 mb-8 lg:mb-0">
+			  <h2 className="text-4xl font-bold text-gray-800 mb-6">
+				<h2 className="text-4xl md:text-5xl font-serif font-bold georgian-wine mb-4">
+					{getTranslation('block3.title', language)}
+				</h2>
+			  </h2>
+			  <p className="text-lg text-gray-700 leading-relaxed">
+				{getTranslation('block3.body', language)}
+			  </p>
+			</div>
+		  </div>
+		</section>
+		<section className="bg-white">
+		  <div className="max-w-screen-xl mx-auto flex flex-wrap items-center py-12 md:py-0" >
+			{/* Left side with text */}
+			<div className="w-full lg:pr-16 px-8 mb-8 lg:mb-0">
+			  <h2 className="text-4xl font-bold text-gray-800 mb-6">
+					{getTranslation('block4.title', language)}
+			  </h2>
+			  <p className="text-lg text-gray-700 leading-relaxed">
+				{getTranslation('block4.body', language)}
+			  </p>
+			</div>
+		  </div>
+		</section>
+		<section className="bg-white">
+		  <div className="max-w-screen-xl mx-auto flex flex-wrap items-center py-12 md:py-0" >
+			{/* Left side with text */}
+			<div className="w-full lg:pr-16 px-8 mb-8 lg:mb-0">
+			  <h2 className="text-4xl font-bold text-gray-800 mb-6">
+					{getTranslation('block5.title', language)}
+			  </h2>
+			  <p className="text-lg text-gray-700 leading-relaxed">
+				{getTranslation('block5.body', language)}
+			  </p>
+			</div>
+		  </div>
+		</section>
+			  <section className="bg-white">
+		  <div className="max-w-screen-xl mx-auto flex flex-wrap items-center py-12 md:py-0" >
+			{/* Left side with text */}
+			<div className="w-full lg:pr-16 px-8 mb-8 lg:mb-0">
+			  <h2 className="text-4xl font-bold text-gray-800 mb-6">
+					{getTranslation('block6.title', language)}
+			  </h2>
+			  <p className="text-lg text-gray-700 leading-relaxed">
+				{getTranslation('block6.body', language)}
+			  </p>
+			</div>
+		  </div>
+		</section>
       {/* Blog Section */}
       <section id="blog" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
